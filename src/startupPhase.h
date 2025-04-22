@@ -1,18 +1,10 @@
 #ifndef STARTUPPHASE_H
 #define STARTUPPHASE_H
-#include <stdio.h>
 
-#include "card.h"
-
-//global var
-extern char dummyValue[3];
-extern Card* dummy; //Dummyvalue globalvariable from card.h
-extern Card *list; //initalize list
+#include "deck.h"
+#include "view/PRINT.H"
 
 //Startupphase Functions
-char* LD(); //Filename not provided
-Card* BuildLinkedListFromFile(FILE* stream);
-Card* LoadDefaultDeck();
 void RunStartupPhase();
 void RunPlayPhase(void);
 

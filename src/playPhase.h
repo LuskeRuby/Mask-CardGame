@@ -4,6 +4,7 @@
 
 #ifndef PLAY_H
 #define PLAY_H
+#define PRINT_H
 
 //PlayPhase Functions
 void RunPlayPhase();
