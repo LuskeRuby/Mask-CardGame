@@ -1,0 +1,12 @@
+CC=gcc
+CFLAGS=-Iinclude
+SRC=src/main.c
+OUT=build/main
+
+all: $(OUT)
+
+$(OUT): $(SRC)
+	$(CC) $(CFLAGS) -o $(OUT) $(SRC)
+
+clean:
+	rm -f $(OUT)

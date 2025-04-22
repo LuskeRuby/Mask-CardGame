@@ -1,0 +1,36 @@
+# Build directories and compiled files
+cmake-build-*/
+build/
+bin/
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.so
+*.dll
+*.dylib
+
+# CMake-generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# JetBrains CLion IDE files
+.idea/
+*.iml
+
+# MacOS system files
+.DS_Store
+
+# Backup and swap files
+*~
+*.swp
+*.swo
+*.bak
+
+# Logs and core dumps
+*.log
+core
