@@ -18,8 +18,8 @@ void RunStartupPhase() {
         fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = 0; // Remove trailing newline
 
-        // Convert input to lowercase (case-insensitive commands)
-        for (int i = 0; input[i]; i++) {
+        // Convert only the command part to uppercase
+        for (int i = 0; input[i] && input[i] != '('; i++) {
             input[i] = toupper(input[i]);
         }
 
@@ -54,8 +54,8 @@ void RunStartupPhase() {
             filename[strlen(input) - 4] = '\0';
 
             SD(filename);
-            } if (strcmp(input, "SD") == 0) {
-                SD(NULL);
+        } else if (strcmp(input, "SD") == 0) { // <-- CHANGE HERE
+            SD(NULL);
 
         } else if (strcmp(input, "QQ") == 0) {
             printf("The program exits.\n");
