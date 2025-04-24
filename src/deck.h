@@ -21,7 +21,7 @@ extern Card *list; //initalize list
 //Card Functions
 Card* CreateCard(char *ID);
 int AddCard(Card *newCard, Card **list);
-Card* DeleteCard(char *cardID, Card **list);
+int DeleteCard(char *cardID, Card **list);
 char* LD(); //Filename not provided
 char* LD(char* filename);
 Card* BuildLinkedListFromFile(FILE* stream);
