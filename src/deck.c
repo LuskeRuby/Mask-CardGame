@@ -10,6 +10,7 @@
 //Create singular CARD:
     Card* CreateCard(char *ID) {
         // allocate a new node
+        //test
         Card *newCard = (Card *) malloc(sizeof(Card));
         // initialize node data
         strcpy(newCard->ID, ID);
