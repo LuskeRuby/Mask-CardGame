@@ -4,9 +4,15 @@
 #include "deck.h"
 
 #include <ctype.h>
+#include <time.h>
 
 #include "startupPhase.h"
+//Global variable
+char dummyValue[3] = "00";
+Card* dummy = NULL; //Dummyvalue globalvariable from card.h
+Card *list = NULL; //initalize list
 
+//Functions
 //Create singular CARD:
     Card* CreateCard(char *ID) {
         // allocate a new node
@@ -63,9 +69,6 @@ Card* DeleteCard(char *cardID, Card **list) {
     return dummy; //Card not found in list
     }
 
-char dummyValue[3] = "00";
-Card* dummy = NULL; //Dummyvalue globalvariable from card.h
-Card *list = NULL; //initalize list
 
 
 Card* BuildLinkedListFromFile(FILE* stream) {
@@ -214,4 +217,113 @@ int SD(char* filename) {
     fclose(outFile);
     printf("Deck saved successfully to '%s'\n", fullpath);
     return 1;
+}
+
+void MoveTopCards(Card** fromPile, Card** toPile, int amount) {
+        int counter = 0;
+        //Topcard and bottomcard of stack that is moved to toPile
+        Card* movingTop = (*fromPile)->prev;
+        Card* movingBottom = *fromPile; //bottom card of stack that is moved to 'toPile'
+
+        while (amount > counter) { //get the Bottomcard
+            movingBottom = movingBottom->prev;
+            counter++;
+        }
+
+        //Update fromPiles new topcard to point to dummy and other way around
+        movingBottom->prev->next = *fromPile;
+        (*fromPile)->prev = movingBottom->prev;
+
+        //Update toPiles pointers
+        (*toPile)->prev->next = movingBottom;
+        movingBottom->prev = (*toPile)->prev;
+
+        (*toPile)->prev = movingTop;
+        movingTop->next = *toPile;
+    }
+
+int SizeOfDeck(Card** deck) {
+        int counter = 0;
+        Card* current = (*deck)->next;
+        //Go from dummy to dummy = size
+        while (strcmp(current->ID, "00") != 0) {
+            counter++;
+            current = current->next;
+        }
+        return counter;
+    }
+
+
+void SI(int split) {
+
+    if (split > 0 && split < 52) { // check split parameter
+    } else { //Invalid parameter (Get random number between 1 and 52)
+        srand(time(NULL));
+        split = (rand() % 52) + 1;
+    }
+
+    Card* pile1 = list; //pile1 = Main deck
+    //Make pile2
+    Card* pile2Dummy = CreateCard(dummyValue);
+    Card* pile2 = pile2Dummy;
+    int counter = 0;
+
+    //Moves 'split' amount of topcards from pile1 to pile2
+    MoveTopCards(&pile1,&pile2,split);
+
+    //Create another empty deck used for shuffling.
+    Card* shuffledDummy = CreateCard(dummyValue);
+    Card* shuffledDeck = shuffledDummy;
+
+    Card* pile2Top = pile2->prev;
+    Card* pile1Top = pile1->prev;
+//interleave cards from pile1&2 to shuffledDeck, until either deck hits the dummy card (dummy = deck is exhausted)
+    while (strcmp(pile2Top->ID, "00") != 0 && strcmp(pile1Top->ID, "00") != 0) {
+        //move card to shuffledDeck
+
+        MoveTopCards(&pile2,&shuffledDeck,1);
+        MoveTopCards(&pile1,&shuffledDeck,1);
+        pile2Top = pile2->prev;
+        pile1Top = pile1->prev;
+    }
+    //Add shuffleddeck ontop of the remaining of pile1 or 2
+    if (strcmp(pile1Top->ID, dummyValue) != 0) { //If pile 2 exhausted
+        MoveTopCards(&shuffledDeck,&pile1,SizeOfDeck(&shuffledDeck));
+
+        //Make pile1 our main deck (global variable)
+        list = pile1;
+    }
+    if (strcmp(pile2Top->ID, dummyValue) != 0) { //if pile1 exhausted
+        MoveTopCards(&shuffledDeck,&pile2,SizeOfDeck(&shuffledDeck));
+
+        //Make pile1 our main deck (global variable)
+        list = pile2;
+    }
+}
+
+void SR() {
+    //Create pile and shuffled pile
+    Card* pile1 = list;
+    Card* dummy1 = CreateCard(dummyValue);
+    Card* shuffledPile = dummy1;
+
+    //Local variables
+    int shuffledPileSize = 1; //Size of shuffledPile (starts at 1 cuz we cant modulo with 0)
+    Card* randomPilePosition = shuffledPile; //Random position in shuffledPile
+
+    //Loop all 52 cards
+    for (int i = 0; i < 52; i++) {
+        //get Get random number between 1 and size of pile
+        srand(time(NULL));
+        int randomNr = (rand() % shuffledPileSize) + 1;
+
+        //Get the Pile position from the given random nr
+        for (int j = 0; j < randomNr; j++) {
+            randomPilePosition = randomPilePosition->next;
+        }
+        //Move 1 (amount = 1) topcard from pile1 to randompileposition in shuffleddeck
+        MoveTopCards(&pile1,&randomPilePosition,1);
+        shuffledPileSize++;
+    }
+    list = shuffledPile; //Update the global list variable
 }

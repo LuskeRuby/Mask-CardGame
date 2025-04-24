@@ -28,8 +28,10 @@ Card* BuildLinkedListFromFile(FILE* stream);
 Card* LoadDefaultDeck();
 int LDValidation(Card* Deck);
 int SD(char* filename);
-
-
+void MoveTopCards(Card** fromPile, Card** toPile, int amount);
+int SizeOfDeck(Card** deck);
+void SI(int split); //Fix overloading!!!!
+void SR();
 //----remove card
 
 #endif //CARD_H

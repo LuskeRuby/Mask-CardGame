@@ -48,6 +48,12 @@ void RunStartupPhase() {
                 printf("Error loading deck '%s'.\n", filename);
             }
 
+        } else if (strcmp(input, "SI") == 0) {
+            SI(5);
+            PrintDeck(1, "SI", "OK");
+        } else if (strcmp(input, "SR") == 0) {
+            SR();
+            PrintDeck(1, "SR", "OK");
         } else if (strncmp(input, "SD(", 3) == 0 && input[strlen(input) - 1] == ')') {
             char filename[100];
             strncpy(filename, input + 3, strlen(input) - 4);
