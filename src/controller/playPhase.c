@@ -5,10 +5,12 @@
 #include "playPhase.h"
 #include <stdio.h>
 #include <string.h>
+#include <model/deck.h>
+
+#include "model/playPhaseCommands.h"
 
 void RunPlayPhase() {
     char input[100];
-
     printf(">>play phase<<. Enter Commands 'Q' to return to the startup Phase):\n");
 
     while (1) {

@@ -14,6 +14,7 @@ int LDValidation(Card* Deck);
 int SD(char* filename);
 void SI(int split); //Fix overloading!!!!
 void SR();
+void SW();
 
 
 #endif //STARTPHASECOMMANDS_H

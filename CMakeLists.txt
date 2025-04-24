@@ -13,4 +13,6 @@ add_executable(Mask_CardGame
         src/view/print.c
         src/model/StartPhaseCommands.c
         src/model/StartPhaseCommands.h
+        src/model/playPhaseCommands.c
+        src/model/playPhaseCommands.h
 )
