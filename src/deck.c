@@ -34,9 +34,8 @@ int AddCard(Card *newCard, Card **list) {
         return 0;
     }
 
-// Delete card (Returns 00 if not found in list).
-//Deletemethod returns the deleted card, remember to free it wont use the deleted card after.
-Card* DeleteCard(char *cardID, Card **list) {
+// Delete card
+int DeleteCard(char *cardID, Card **list) {
         Card* current = (*list)->next; //list starts at dummy by going next we start from start of list
         int IDCompare;
 
@@ -47,20 +46,17 @@ Card* DeleteCard(char *cardID, Card **list) {
                 current = current->next;
                 continue;
             } if (IDCompare == 0) { //Match found -> remove
-                Card* previousCard = current->prev; //previous from current
-                Card* nextCard = current->next; //next from current
+                Card* previousCard = current->prev; //previous from element that is removed
+                Card* nextCard = current->next; //next from element that is removed
 
-                //Change pointers
-                previousCard->next = previousCard->next->next;
-                nextCard->prev = nextCard->prev->prev;
+                previousCard->next = nextCard;
+                nextCard->prev = previousCard;
 
-                //Change pointers of returned (delted) card to itself
-                current->prev = current;
-                current->next = current;
-                return current; //Done
+                free(current);  // deallocate memory - no longer needed
+                return 0; //Done
             }
         }
-    return dummy; //Card not found in list
+        return -1; //Card not found in list
     }
 
 char dummyValue[3] = "00";
