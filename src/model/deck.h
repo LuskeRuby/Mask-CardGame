@@ -22,16 +22,9 @@ extern Card *list; //initalize list
 Card* CreateCard(char *ID);
 int AddCard(Card *newCard, Card **list);
 int DeleteCard(char *cardID, Card **list);
-char* LD(); //Filename not provided
-char* LD(char* filename);
-Card* BuildLinkedListFromFile(FILE* stream);
-Card* LoadDefaultDeck();
-int LDValidation(Card* Deck);
-int SD(char* filename);
 void MoveTopCards(Card** fromPile, Card** toPile, int amount);
 int SizeOfDeck(Card** deck);
-void SI(int split); //Fix overloading!!!!
-void SR();
+
 //----remove card
 
 #endif //CARD_H

@@ -7,8 +7,10 @@ include_directories(${PROJECT_SOURCE_DIR}/src)
 
 add_executable(Mask_CardGame
         src/main.c
-        src/deck.c
-        src/playPhase.c
-        src/startupPhase.c
+        src/model/deck.c
+        src/controller/playPhase.c
+        src/controller/startupPhase.c
         src/view/print.c
+        src/model/StartPhaseCommands.c
+        src/model/StartPhaseCommands.h
 )

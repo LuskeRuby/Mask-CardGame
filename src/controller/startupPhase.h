@@ -1,7 +1,7 @@
 #ifndef STARTUPPHASE_H
 #define STARTUPPHASE_H
 
-#include "deck.h"
+#include "model/deck.h"
 #include "view/PRINT.H"
 
 //Startupphase Functions

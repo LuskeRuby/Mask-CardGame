@@ -3,7 +3,7 @@
 //
 
 #include "print.h"
-#include "deck.h"
+#include "model/deck.h"
 #include <stdio.h>
 #include <string.h>
 
