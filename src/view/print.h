@@ -7,6 +7,7 @@
 
 
 
-int PrintDeck(int SW, char lastCommand[3], char* msg);
+int PrintDeck(char lastCommand[3], char* msg);
+void PrintPlayPhase(char lastCommand[3], char* msg);
 
 #endif //PRINT_H

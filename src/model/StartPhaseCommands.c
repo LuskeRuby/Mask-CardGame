@@ -86,9 +86,8 @@ char* LD(char* filename) {
         }
     }
 
-    // Set global list and dummy
+    // Set global list
     list = deck;
-    dummy = deck;
     return "OK";
 }
 
@@ -137,7 +136,7 @@ int SD(char* filename) {
     }
 
     // Check for valid deck
-    if (dummy == NULL || list == NULL || list->next == dummy) {
+    if (list == NULL || list == NULL || list->next == list) {
         printf("Error: No deck loaded to save.\n");
         return 0;
     }
@@ -232,4 +231,13 @@ void SR() {
         shuffledPileSize++;
     }
     list = shuffledPile; //Update the global list variable
+}
+
+void SW() {
+    Card* listptr = list->next;
+    while (strcmp(listptr->ID, dummyValue) != 0) {
+        listptr->faceUp = 1;
+        listptr = listptr->next;
+    }
+
 }

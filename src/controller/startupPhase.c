@@ -2,10 +2,12 @@
 
 #include <ctype.h>
 
-#include "model/StartPhaseCommands.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include "model/playPhaseCommands.h"
+#include "model/StartPhaseCommands.h"
 
 
 void RunStartupPhase() {
@@ -29,7 +31,7 @@ void RunStartupPhase() {
             char* result = LD(NULL);
             if (strcmp(result, "OK") == 0) {
                 printf("Default deck loaded.\n");
-                PrintDeck(1, "LD", "OK");
+                PrintDeck("LD", "OK");
             } else {
                 printf("Error loading default deck.\n");
             }
@@ -43,17 +45,19 @@ void RunStartupPhase() {
             char* result = LD(filename);
             if (strcmp(result, "OK") == 0) {
                 printf("Deck '%s' loaded.\n", filename);
-                PrintDeck(1, "LD", "OK");
+                PrintDeck("LD", "OK");
             } else {
                 printf("Error loading deck '%s'.\n", filename);
             }
-
+        } else if (strcmp(input, "SW") == 0) {
+            SW();
+            PrintDeck("SW", "OK");
         } else if (strcmp(input, "SI") == 0) {
             SI(5);
-            PrintDeck(1, "SI", "OK");
+            PrintDeck("SI", "OK");
         } else if (strcmp(input, "SR") == 0) {
             SR();
-            PrintDeck(1, "SR", "OK");
+            PrintDeck("SR", "OK");
         } else if (strncmp(input, "SD(", 3) == 0 && input[strlen(input) - 1] == ')') {
             char filename[100];
             strncpy(filename, input + 3, strlen(input) - 4);
