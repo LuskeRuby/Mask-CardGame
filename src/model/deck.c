@@ -64,7 +64,8 @@ int DeleteCard(char *cardID, Card **list) {
         }
         return -1; //Card not found in list
     }
-
+//Give the dummy value of frompile and toPile, to move 'x' amount of topcards from
+//'fromPile' to 'toPile'
 void MoveTopCards(Card** fromPile, Card** toPile, int amount) {
         int counter = 0;
         //Topcard and bottomcard of stack that is moved to toPile
