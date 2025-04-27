@@ -1,6 +1,7 @@
 #include "startupPhase.h"
 
 #include <ctype.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -8,57 +9,63 @@
 #include "model/playPhaseCommands.h"
 #include "model/StartPhaseCommands.h"
 
+
 void RunStartupPhase() {
     char input[100];
 
-    printf("Enter commands (LD, SW, SD, SI, SR, QQ, P):\n");
+    printf("Enter commands (type 'LD' to load, 'P' to enter StartPhase, 'QQ' to quit):\n");
 
     while (1) {
         printf("INPUT > ");
         fgets(input, sizeof(input), stdin);
-        input[strcspn(input, "\n")] = 0; // Remove newline
+        input[strcspn(input, "\n")] = 0; // Remove trailing newline
 
-        // Always make the first two characters uppercase
-        for (int i = 0; i < 2 && input[i]; i++) {
+        // Convert only the command part to uppercase
+        for (int i = 0; input[i] && input[i] != '('; i++) {
             input[i] = toupper(input[i]);
         }
 
-        if (strcmp(input, "LD") == 0 || strncmp(input, "LD ", 3) == 0) {
-            char* arg = input[2] == ' ' ? input + 3 : NULL;
-            char* result = LD(arg);
+
+        if (strcmp(input, "LD") == 0) {
+            // Load default deck
+            char* result = LD(NULL);
             if (strcmp(result, "OK") == 0) {
-                printf("Deck '%s' loaded.\n", arg ? arg : "default");
+                printf("Default deck loaded.\n");
                 PrintDeck("LD", "OK");
             } else {
-                printf("Error loading deck '%s'.\n", arg ? arg : "default");
+                printf("Error loading default deck.\n");
             }
 
-        } else if (strcmp(input, "SW") == 0) {  //OVERFLOW IF DECK NOT LOADED ALREADY
+        } else if (strncmp(input, "LD(", 3) == 0 && input[strlen(input) - 1] == ')') {
+            // Extract filename inside the parentheses
+            char filename[80];
+            strncpy(filename, input + 3, strlen(input) - 4);
+            filename[strlen(input) - 4] = '\0';  // Null-terminate
+
+            char* result = LD(filename);
+            if (strcmp(result, "OK") == 0) {
+                printf("Deck '%s' loaded.\n", filename);
+                PrintDeck("LD", "OK");
+            } else {
+                printf("Error loading deck '%s'.\n", filename);
+            }
+        } else if (strcmp(input, "SW") == 0) {
             SW();
             PrintDeck("SW", "OK");
-
-
-        } else if (strcmp(input, "SD") == 0 || strncmp(input, "SD ", 3) == 0) {
-            char* arg = input[2] == ' ' ? input + 3 : NULL;
-            char* result = SD(arg);
-            if (strcmp(result, "OK") == 0) {
-                printf("Deck '%s' saved.\n", arg ? arg : "default");
-                PrintDeck("SD", "OK");
-            } else {
-                printf("Error saving deck '%s'.\n", arg ? arg : "default");
-            }
-
-        } else if (strcmp(input, "SI") == 0 || strncmp(input, "SI ", 3) == 0) {
-            int split = 0; // default random
-            if (strncmp(input, "SI ", 3) == 0) {
-                split = atoi(input + 3); // try to parse split if given
-            }
-            SI(split);
+        } else if (strcmp(input, "SI") == 0) {
+            SI(5);
             PrintDeck("SI", "OK");
-
         } else if (strcmp(input, "SR") == 0) {
             SR();
             PrintDeck("SR", "OK");
+        } else if (strncmp(input, "SD(", 3) == 0 && input[strlen(input) - 1] == ')') {
+            char filename[100];
+            strncpy(filename, input + 3, strlen(input) - 4);
+            filename[strlen(input) - 4] = '\0';
+
+            SD(filename);
+        } else if (strcmp(input, "SD") == 0) { // <-- CHANGE HERE
+            SD(NULL);
 
         } else if (strcmp(input, "QQ") == 0) {
             printf("The program exits.\n");

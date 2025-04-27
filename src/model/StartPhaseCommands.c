@@ -54,23 +54,22 @@ char* LD(char* filename) {
             return "0";
         }
     } else {
-        char customFilename[100];
-        strncpy(customFilename, filename, sizeof(customFilename) - 1);
-        customFilename[sizeof(customFilename) - 1] = '\0';
+        // Convert filename to lowercase to handle case-insensitive input
+        char lowerFilename[100];
+        strncpy(lowerFilename, filename, sizeof(lowerFilename) - 1);
+        lowerFilename[sizeof(lowerFilename) - 1] = '\0';
 
-        // Append .txt if missing
-        if (strlen(customFilename) < 4 || strcmp(customFilename + strlen(customFilename) - 4, ".txt") != 0) {
-            strncat(customFilename, ".txt", sizeof(customFilename) - strlen(customFilename) - 1);
+        for (int i = 0; lowerFilename[i]; i++) {
+            lowerFilename[i] = tolower(lowerFilename[i]);
         }
 
-        // Build full path
+        //all files are located in the /data directory
         char path[100] = "data/";
-        strncat(path, customFilename, sizeof(path) - strlen(path) - 1);
+        strncat(path, lowerFilename, sizeof(path) - strlen(path) - 1);
 
-        // Open file
         inStream = fopen(path, "r");
         if (inStream == NULL) {
-            printf("Error: Could not open file '%s'\n", path);
+            printf("Filename '%s' not found\n", filename);
             return "0";
         }
 
@@ -87,9 +86,11 @@ char* LD(char* filename) {
         }
     }
 
+    // Set global list
     list = deck;
     return "OK";
 }
+
 
 int LDValidation(Card* deckToValidate) {
     // Load a fresh default deck to compare against
@@ -123,27 +124,19 @@ int LDValidation(Card* deckToValidate) {
 }
 
 int SD(char* filename) {
+    // Fallback to default name if filename is NULL or empty
     const char* defaultName = "cards.txt";
     const char* folder = "data/";
-    char fullpath[150];
 
+    char fullpath[100];
     if (filename == NULL || strlen(filename) == 0) {
         snprintf(fullpath, sizeof(fullpath), "%s%s", folder, defaultName);
     } else {
-        char customFilename[100];
-        strncpy(customFilename, filename, sizeof(customFilename) - 1);
-        customFilename[sizeof(customFilename) - 1] = '\0';
-
-        // Append .txt if missing
-        if (strlen(customFilename) < 4 || strcmp(customFilename + strlen(customFilename) - 4, ".txt") != 0) {
-            strncat(customFilename, ".txt", sizeof(customFilename) - strlen(customFilename) - 1);
-        }
-
-        snprintf(fullpath, sizeof(fullpath), "%s%s", folder, customFilename);
+        snprintf(fullpath, sizeof(fullpath), "%s%s", folder, filename);
     }
 
-    // Validate deck
-    if (list == NULL || list->next == list) {
+    // Check for valid deck
+    if (list == NULL || list == NULL || list->next == list) {
         printf("Error: No deck loaded to save.\n");
         return 0;
     }
@@ -154,7 +147,6 @@ int SD(char* filename) {
         return 0;
     }
 
-    // Write deck
     Card* current = list->next;
     while (strcmp(current->ID, dummyValue) != 0) {
         fprintf(outFile, "%s\n", current->ID);
@@ -165,7 +157,6 @@ int SD(char* filename) {
     printf("Deck saved successfully to '%s'\n", fullpath);
     return 1;
 }
-
 
 
 void SI(int split) {
@@ -245,8 +236,8 @@ void SR() {
 void SW() {
     Card* listptr = list->next;
     while (strcmp(listptr->ID, dummyValue) != 0) {
-    listptr->faceUp = 1;
+        listptr->faceUp = 1;
         listptr = listptr->next;
     }
-}
 
+}
