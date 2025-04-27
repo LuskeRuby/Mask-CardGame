@@ -49,20 +49,21 @@ void ExtractColumnsFromInput(char *input, Card** fromArr, Card** toArr, char Has
     //first assign readable variable names to the data (ColNr are typecast to int)
     char fromColType = input[0]; int fromColNr = (int)(input[1]-'0');
     char toColType; int toColNr;
-
-    //Different reading based on if HasCardID = 0 or 1.
+    //Different reading if HasCardID = 0 or 1.
     if (HasCardID == 1) { //Inputtype: XX:YY->ZZ
-         toColType = input[7]; toColNr = (int)(input[8]-'0');
+        toColType = input[7];
+        toColNr = (int)(input[8]-'0');
     } else if (HasCardID == 0) { //Inputtype: XX->ZZ
-        toColType = input[4]; toColNr = (int)(input[5]-'0');
+        toColType = input[4];
+        toColNr = (int)(input[5]-'0');
     }
+
     //Find correct columnArr
     if (fromColType == 'C') { //Normal column
         *fromArr = columnArr[fromColNr -1];
     } else { //foundation
         *fromArr = foundationArr[fromColNr-1];
     }
-
     if (toColType == 'C') {
         *toArr = columnArr[toColNr-1];
     } else {

@@ -16,6 +16,7 @@ void RunPlayPhase() {
     char input[100];
     printf(">>play phase<<. Enter Commands 'Q' to return to the startup Phase):\n");
     InitArray();
+    PrintPlayPhase("ok", "ok");
     while (1) {
         printf("INPUT > ");
         fgets(input, sizeof(input),stdin);
@@ -52,19 +53,19 @@ void RunPlayPhase() {
             //Move cards
             if (found == '1') { //If we found the card in the column then move, otherwise print error
                 MoveTopCards(&fromArr,&toArr,amountCounter);
+                PrintPlayPhase("ok", "ok");
             } else {
                 printf("The card moved does not exist at the specified location. \n");
             }
-            //Print the cards in console
-            PrintPlayPhase("ok", "ok");
+
         }
         //if input doesnt have cardID: xx->zz
         else if (input[2] == '-' && input[3] == '>') {
-            Card* fromArr;   Card* toArr;
+            Card* fromArr = CreateCard("00");   Card* toArr = CreateCard("00");
             ExtractColumnsFromInput(&input,  &fromArr, &toArr, 0);
-
             MoveTopCards(&fromArr,&toArr,1);
             PrintPlayPhase("ok", "ok");
+
         }
 
         //Check if command is a startupPhase Command
