@@ -54,22 +54,23 @@ char* LD(char* filename) {
             return "0";
         }
     } else {
-        // Convert filename to lowercase to handle case-insensitive input
-        char lowerFilename[100];
-        strncpy(lowerFilename, filename, sizeof(lowerFilename) - 1);
-        lowerFilename[sizeof(lowerFilename) - 1] = '\0';
+        char finalFilename[100];
+        strncpy(finalFilename, filename, sizeof(finalFilename) - 1);
+        finalFilename[sizeof(finalFilename) - 1] = '\0';
 
-        for (int i = 0; lowerFilename[i]; i++) {
-            lowerFilename[i] = tolower(lowerFilename[i]);
+        // Append .txt if missing
+        if (strlen(finalFilename) < 4 || strcmp(finalFilename + strlen(finalFilename) - 4, ".txt") != 0) {
+            strncat(finalFilename, ".txt", sizeof(finalFilename) - strlen(finalFilename) - 1);
         }
 
-        //all files are located in the /data directory
-        char path[100] = "data/";
-        strncat(path, lowerFilename, sizeof(path) - strlen(path) - 1);
+        // Build full path
+        char path[150] = "data/";
+        strncat(path, finalFilename, sizeof(path) - strlen(path) - 1);
 
+        // Open file
         inStream = fopen(path, "r");
         if (inStream == NULL) {
-            printf("Filename '%s' not found\n", filename);
+            printf("Error: Could not open file '%s'\n", path);
             return "0";
         }
 
@@ -86,7 +87,6 @@ char* LD(char* filename) {
         }
     }
 
-    // Set global list
     list = deck;
     return "OK";
 }
@@ -123,30 +123,39 @@ int LDValidation(Card* deckToValidate) {
     return 1; // All good!
 }
 
-int SD(char* filename) {
-    // Fallback to default name if filename is NULL or empty
+char* SD(char* filename) {
     const char* defaultName = "cards.txt";
     const char* folder = "data/";
+    char fullpath[150];
 
-    char fullpath[100];
     if (filename == NULL || strlen(filename) == 0) {
         snprintf(fullpath, sizeof(fullpath), "%s%s", folder, defaultName);
     } else {
-        snprintf(fullpath, sizeof(fullpath), "%s%s", folder, filename);
+        char finalFilename[100];
+        strncpy(finalFilename, filename, sizeof(finalFilename) - 1);
+        finalFilename[sizeof(finalFilename) - 1] = '\0';
+
+        // Append .txt if missing
+        if (strlen(finalFilename) < 4 || strcmp(finalFilename + strlen(finalFilename) - 4, ".txt") != 0) {
+            strncat(finalFilename, ".txt", sizeof(finalFilename) - strlen(finalFilename) - 1);
+        }
+
+        snprintf(fullpath, sizeof(fullpath), "%s%s", folder, finalFilename);
     }
 
-    // Check for valid deck
-    if (list == NULL || list == NULL || list->next == list) {
+    // Validate deck
+    if (list == NULL || list->next == list) {
         printf("Error: No deck loaded to save.\n");
-        return 0;
+        return "0";
     }
 
     FILE* outFile = fopen(fullpath, "w");
     if (outFile == NULL) {
         printf("Error: Could not create file '%s'\n", fullpath);
-        return 0;
+        return "0";
     }
 
+    // Write deck
     Card* current = list->next;
     while (strcmp(current->ID, dummyValue) != 0) {
         fprintf(outFile, "%s\n", current->ID);
@@ -155,17 +164,18 @@ int SD(char* filename) {
 
     fclose(outFile);
     printf("Deck saved successfully to '%s'\n", fullpath);
-    return 1;
+    return "OK";
 }
+
 
 
 void SI(int split) {
 
     if (split > 0 && split < 52) { // check split parameter
-    } else { //Invalid parameter (Get random number between 1 and 52)
-        srand(time(NULL));
-        split = (rand() % 52) + 1;
-    }
+        } else { //Invalid parameter (Get random number between 1 and 52)
+            srand(time(NULL));
+            split = (rand() % 52) + 1;
+        }
 
     Card* pile1 = list; //pile1 = Main deck
     //Make pile2

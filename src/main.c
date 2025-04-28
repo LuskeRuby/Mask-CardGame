@@ -7,7 +7,6 @@
 
 int main(void) {
 
-RunStartupPhase();
 //RunPlayPhase();
     //Lines below used for test (DELETE BEFORE SUBMISSION)
     LD(NULL);
@@ -19,6 +18,8 @@ RunStartupPhase();
     Card* k5 = columnArr[4];
     Card* k6 = columnArr[5];
     Card* k7 = columnArr[6];
+
+    RunStartupPhase();
 
     //MoveTopCards(&columnArr[1],&columnArr[0],5);
     PrintPlayPhase("ok", "ok");

@@ -20,14 +20,16 @@ void RunStartupPhase() {
         fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = 0; // Remove trailing newline
 
-        // Convert only the command part to uppercase
-        for (int i = 0; input[i] && input[i] != '('; i++) {
+        // Make first two letters uppercase
+        for (int i = 0; i < 2 && input[i]; i++) {
             input[i] = toupper(input[i]);
         }
 
 
+        // All commands packed in if/else statements
+
+        // LD default deck
         if (strcmp(input, "LD") == 0) {
-            // Load default deck
             char* result = LD(NULL);
             if (strcmp(result, "OK") == 0) {
                 printf("Default deck loaded.\n");
@@ -36,11 +38,11 @@ void RunStartupPhase() {
                 printf("Error loading default deck.\n");
             }
 
-        } else if (strncmp(input, "LD(", 3) == 0 && input[strlen(input) - 1] == ')') {
-            // Extract filename inside the parentheses
+            // LD filename
+        } else if (strncmp(input, "LD ", 3) == 0) {
             char filename[80];
-            strncpy(filename, input + 3, strlen(input) - 4);
-            filename[strlen(input) - 4] = '\0';  // Null-terminate
+            strcpy(filename, input + 3);  // Copy everything after "LD "
+            filename[79] = '\0';  // Make sure it is null-terminated (for safety)
 
             char* result = LD(filename);
             if (strcmp(result, "OK") == 0) {
@@ -49,23 +51,53 @@ void RunStartupPhase() {
             } else {
                 printf("Error loading deck '%s'.\n", filename);
             }
+
+
         } else if (strcmp(input, "SW") == 0) {
             SW();
             PrintDeck("SW", "OK");
-        } else if (strcmp(input, "SI") == 0) {
-            SI(5);
+
+            //SI pick a random number
+        } else if (strcmp(input, "SI") == 0) { //will crash if LIST not initialized
+            SI(0);
             PrintDeck("SI", "OK");
-        } else if (strcmp(input, "SR") == 0) {
+
+        } else if (strncmp(input, "SI ", 3) == 0) {
+            int split = atoi(input + 3); // Parse after "SI "
+
+            if (split > 1 && split < 52) {
+                SI(split);
+                PrintDeck("SI", "OK");
+            } else {
+                printf("Must provide a number between 1 and 52.\n");
+            }
+
+
+        } else if (strcmp(input, "SR") == 0) {   //will crash if LIST not initialized
             SR();
             PrintDeck("SR", "OK");
-        } else if (strncmp(input, "SD(", 3) == 0 && input[strlen(input) - 1] == ')') {
-            char filename[100];
-            strncpy(filename, input + 3, strlen(input) - 4);
-            filename[strlen(input) - 4] = '\0';
 
-            SD(filename);
-        } else if (strcmp(input, "SD") == 0) { // <-- CHANGE HERE
-            SD(NULL);
+        } else if (strcmp(input, "SD") == 0) {
+            char* result = SD(NULL);
+            if (strcmp(result, "OK") == 0) {
+                printf("Deck '%s' Saved.\n", "cards.txt");
+                PrintDeck("SD", "OK");
+            } else {
+                printf("Error saving default deck.\n");
+            }
+
+        } else if (strncmp(input, "SD ", 3) == 0) {
+            char filename[80];
+            strcpy(filename, input + 3);  // Copy everything after "SD "
+            filename[79] = '\0';
+
+            char* result = SD(filename);
+            if (strcmp(result, "OK") == 0) {
+                printf("Deck '%s' Saved.\n", filename);
+                PrintDeck("SD", "OK");
+            } else {
+                printf("Error saving deck '%s'.\n", filename);
+            }
 
         } else if (strcmp(input, "QQ") == 0) {
             printf("The program exits.\n");
@@ -75,7 +107,7 @@ void RunStartupPhase() {
             RunPlayPhase();
 
         } else {
-            printf("Unknown command or input too many characters.\n");
+            printf("Unknown command\n");
         }
     }
 }
