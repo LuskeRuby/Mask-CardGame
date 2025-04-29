@@ -71,6 +71,20 @@ void ExtractColumnsFromInput(char *input, Card** fromArr, Card** toArr, char Has
     }
 }
 
+int GetRank(Card* card) {
+    char rankChar = card->ID[0];
+    if (rankChar >= '2' && rankChar <= '9') {
+        return rankChar - '0'; }
+    if (rankChar == 'A') { return 1;  }
+    if (rankChar == 'T') { return 10; }
+    if (rankChar == 'J') { return 11; }
+    if (rankChar == 'Q') { return 12; }
+    if (rankChar == 'K') { return 13; }
+
+    return -1; // Error
+}
+
+
 
 
 

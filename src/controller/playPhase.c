@@ -1,12 +1,8 @@
-//
-// Created by rubym on 14/04/2025.
-//
-
 #include "playPhase.h"
 #include <stdio.h>
 #include <string.h>
 #include <model/deck.h>
-#include <view/print.h>
+#include <view/PRINT.H>
 
 #include "model/playPhaseCommands.h"
 
@@ -17,6 +13,8 @@ void RunPlayPhase() {
     printf(">>play phase<<. Enter Commands 'Q' to return to the startup Phase):\n");
     InitArray();
     PrintPlayPhase("ok", "ok");
+
+
     while (1) {
         printf("INPUT > ");
         fgets(input, sizeof(input),stdin);
@@ -28,6 +26,7 @@ void RunPlayPhase() {
             printf("Returned to startupPhase.\n");
             RunStartupPhase();
         }
+
         //If input has cardID: xx:yy->zz
         else if (input[2] == ':') {
 
@@ -72,7 +71,7 @@ void RunPlayPhase() {
         else if(strncmp(input, "LD", 2) == 0 ||
                 strncmp(input, "SD", 2) == 0 ||
                 strcmp(input, "SW") == 0 ||
-                strcmp(input, "SI") == 0 ||
+                strncmp(input, "SI", 2) == 0 ||
                 strcmp(input, "SR") == 0||
                 strcmp(input, "QQ") == 0 ) {
             printf("Command not available in the PLAY phase \n");
