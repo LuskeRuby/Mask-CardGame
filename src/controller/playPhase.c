@@ -74,6 +74,9 @@ void RunPlayPhase() {
                 }
 
                 MoveTopCards(&fromArr, &toArr, amountCounter);
+                if (fromArr->prev->faceUp == 0) {
+                    fromArr->prev->faceUp = 1;
+                }
                 PrintPlayPhase("ok", "ok");
             } else {
                 printf("Card not found in source column.\n");
@@ -145,6 +148,9 @@ void RunPlayPhase() {
             }
 
             MoveTopCards(&fromArr, &toArr, 1);
+            if (fromArr->prev->faceUp == 0) {
+                fromArr->prev->faceUp = 1;
+            }
             PrintPlayPhase("ok", "ok");
         }
 
