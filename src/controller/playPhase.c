@@ -18,7 +18,7 @@ void RunPlayPhase() {
     while (1) {
         printf("INPUT > ");
         fgets(input, sizeof(input),stdin);
-        input[strcspn(input, "\n")] = 0; // Remove trailing newline
+        input[strcspn(input, "\n")] = 0; // remove newline
 
         //Check if command is exacly "Q"
         if (strcmp(input, "Q") == 0) {
@@ -28,7 +28,6 @@ void RunPlayPhase() {
 
         //If input has cardID: xx:yy->zz
         else if (input[2] == ':') {
-
             //Extract CardID from input
             char moveCardID[3];
             moveCardID[0] = input[3];
@@ -54,7 +53,8 @@ void RunPlayPhase() {
             }
 
             //Move cards
-            if (found == '1') { //If we found the card in the column then run validation, otherwise print error
+            if (found == '1') {
+                //If we found the card in the column then run validation, otherwise print error
                 Card* movingCard = cardIterator;
                 Card* targetCard = toArr->prev;
 
@@ -95,10 +95,10 @@ void RunPlayPhase() {
                         }
                     }
                 }
+            }
 
-
-                //if input doesnt have cardID: xx->zz
-                else if (input[2] == '-' && input[3] == '>') {
+            //if input doesnt have cardID: xx->zz
+        } else if (input[2] == '-' && input[3] == '>') {
                     Card* fromArr = CreateCard("00");
                     Card* toArr = CreateCard("00");
                     ExtractColumnsFromInput(&input,  &fromArr, &toArr, 0);
@@ -139,8 +139,9 @@ void RunPlayPhase() {
                 }
             }
         }
-    }
-}
+
+
+
 
 
 
