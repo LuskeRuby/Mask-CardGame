@@ -74,7 +74,8 @@ void RunPlayPhase() {
                 }
 
                 MoveTopCards(&fromArr, &toArr, amountCounter);
-                if (fromArr->prev->faceUp == 0) {
+                //If columns topcard is facedown, turn it faceup
+                if (fromArr->prev->faceUp == 0 && strcmp(fromArr->prev->ID, "00") != 0) {
                     fromArr->prev->faceUp = 1;
                 }
                 PrintPlayPhase("ok", "ok");
@@ -148,7 +149,8 @@ void RunPlayPhase() {
             }
 
             MoveTopCards(&fromArr, &toArr, 1);
-            if (fromArr->prev->faceUp == 0) {
+            //If columns topcard is facedown, turn faceup
+            if (fromArr->prev->faceUp == 0 && strcmp(fromArr->prev->ID, "00") != 0) {
                 fromArr->prev->faceUp = 1;
             }
             PrintPlayPhase("ok", "ok");
