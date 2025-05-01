@@ -2,17 +2,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <model/deck.h>
-#include <view/PRINT.H>
-
 #include "model/playPhaseCommands.h"
-
-
+#include "view/print.h"
 
 void RunPlayPhase() {
     char input[100];
     printf(">>play phase<<. Enter Commands 'Q' to return to the startup Phase):\n");
     InitArray();
-    PrintPlayPhase("ok", "ok");
+    PrintPlayPhase("P", "ok");
 
     while (1) {
         printf("INPUT > ");

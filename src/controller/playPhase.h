@@ -5,6 +5,8 @@
 #ifndef PLAY_H
 #define PLAY_H
 #define PRINT_H
+#include "view/print.h"
+
 
 //PlayPhase Functions
 void RunPlayPhase();

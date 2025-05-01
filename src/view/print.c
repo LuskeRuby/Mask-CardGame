@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
+
 #include "model/playPhaseCommands.h"
 
 int PrintDeck(char lastCommand[3], char* msg) {

@@ -8,6 +8,8 @@
 
 #include "model/playPhaseCommands.h"
 #include "model/StartPhaseCommands.h"
+#include "view/print.h"
+
 
 
 void RunStartupPhase() {
