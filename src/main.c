@@ -1,14 +1,34 @@
+#define SDL_MAIN_HANDLED
+#define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
 #include "controller/startupPhase.h"
 #include "model/playPhaseCommands.h"
 
 //USED FOR TEST (DELETE BEFORE SUBMISSION)
+#include <view/GUI.h>
 #include "model/StartPhaseCommands.h"
 
 
-int main(void) {
 
-//RunPlayPhase();
-    //Lines below used for test (DELETE BEFORE SUBMISSION)
+
+
+
+SDL_AppInit_func (start);
+
+SDL_AppEvent_func(press);
+
+SDL_AppIterate_func(update);
+
+SDL_AppQuit_func(close);
+
+
+
+
+
+
+
+
+
+/*
     LD(NULL);
     InitArray();
     Card* k1 = columnArr[0];
@@ -22,6 +42,6 @@ int main(void) {
     RunStartupPhase();
 
     //MoveTopCards(&columnArr[1],&columnArr[0],5);
-    PrintPlayPhase("ok", "ok");
+    PrintPlayPhase("ok", "ok"); */
 
-}
+
