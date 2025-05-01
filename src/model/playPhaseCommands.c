@@ -10,6 +10,7 @@
 Card* columnArr[7];
 Card* foundationArr[4];
 
+
 void InitArray() {
     //Populate colum and foundation arrays with dummyvalues.
     for (int i = 0; i < 7; i++) {

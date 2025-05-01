@@ -2,18 +2,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <model/deck.h>
-#include <view/PRINT.H>
+#include "view/print.h"
 
 #include "model/playPhaseCommands.h"
-
+char outputString[500]; //Initialize String sent to GUI
 
 
 void RunPlayPhase() {
+   outputString[0] = '\0';
     char input[100];
     printf(">>play phase<<. Enter Commands 'Q' to return to the startup Phase):\n");
     InitArray();
-    PrintPlayPhase("ok", "ok");
-
+    PrintPlayPhase("P", "ok", &outputString);
     while (1) {
         printf("INPUT > ");
         fgets(input, sizeof(input), stdin);
@@ -78,7 +78,7 @@ void RunPlayPhase() {
                 if (fromArr->prev->faceUp == 0 && strcmp(fromArr->prev->ID, "00") != 0) {
                     fromArr->prev->faceUp = 1;
                 }
-                PrintPlayPhase("ok", "ok");
+                PrintPlayPhase("ok", "ok",&outputString);
             } else {
                 printf("Card not found in source column.\n");
             }
@@ -153,7 +153,7 @@ void RunPlayPhase() {
             if (fromArr->prev->faceUp == 0 && strcmp(fromArr->prev->ID, "00") != 0) {
                 fromArr->prev->faceUp = 1;
             }
-            PrintPlayPhase("ok", "ok");
+            PrintPlayPhase("ok", "ok",&outputString);
         }
 
         // Invalid in play phase
