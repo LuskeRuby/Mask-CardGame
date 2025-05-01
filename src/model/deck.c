@@ -1,12 +1,13 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include "deck.h"
+#include <stdio.h>
+#include "model/deck.h"
 
-#include <ctype.h>
-#include <time.h>
+#include <stdlib.h>
 
-#include "controller/startupPhase.h"
+#include "view/PRINT.H"
+#include "model/playPhaseCommands.h"
+
+
 //Global variable
 char dummyValue[3] = "00";
 Card* dummy = NULL; //Dummyvalue globalvariable from card.h
