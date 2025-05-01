@@ -170,6 +170,6 @@ void RunPlayPhase() {
             printf("Unknown command \n");
         }
     }
-//hej
+
 
 }

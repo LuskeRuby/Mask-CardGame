@@ -15,4 +15,6 @@ add_executable(Mask_CardGame
         src/model/StartPhaseCommands.h
         src/model/playPhaseCommands.c
         src/model/playPhaseCommands.h
+        src/model/playPhaseValidation.c
+        src/model/playPhaseValidation.h
 )
