@@ -22,6 +22,6 @@ int main(void) {
     RunStartupPhase();
 
     //MoveTopCards(&columnArr[1],&columnArr[0],5);
-    PrintPlayPhase("ok", "ok");
+
 
 }
