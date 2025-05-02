@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
+#include <stdio.h>
 #include "deck.h"
 
 Card* BuildLinkedListFromFile(FILE* stream) {
@@ -123,30 +123,32 @@ int LDValidation(Card* deckToValidate) {
     return 1; // All good!
 }
 
-char* SD(char* filename) {
-    const char* defaultName = "cards.txt";
-    const char* folder = "data/";
-    char fullpath[150];
 
-    if (filename == NULL || strlen(filename) == 0) {
-        snprintf(fullpath, sizeof(fullpath), "%s%s", folder, defaultName);
+char* SD(char* filename) {
+    const char* folder = "data/";
+    const char* defaultName = "cards.txt";
+    static char fullpath[150];
+
+    if (filename == NULL) {
+        // Use default filename
+        strcpy(fullpath, folder);
+        strcat(fullpath, defaultName);
+    } else if (strlen(filename) == 0) {
+        printf("Error: filename must not be an empty string.\n");
+        return "0";
     } else {
-        char finalFilename[100];
+        static char finalFilename[100];
         strncpy(finalFilename, filename, sizeof(finalFilename) - 1);
         finalFilename[sizeof(finalFilename) - 1] = '\0';
 
         // Append .txt if missing
-        if (strlen(finalFilename) < 4 || strcmp(finalFilename + strlen(finalFilename) - 4, ".txt") != 0) {
+        int len = (int)strlen(finalFilename);
+        if (len < 4 || strcmp(finalFilename + len - 4, ".txt") != 0) {
             strncat(finalFilename, ".txt", sizeof(finalFilename) - strlen(finalFilename) - 1);
         }
 
-        snprintf(fullpath, sizeof(fullpath), "%s%s", folder, finalFilename);
-    }
-
-    // Validate deck
-    if (list == NULL || list->next == list) {
-        printf("Error: No deck loaded to save.\n");
-        return "0";
+        strcpy(fullpath, folder);
+        strcat(fullpath, finalFilename);
     }
 
     FILE* outFile = fopen(fullpath, "w");
@@ -158,7 +160,8 @@ char* SD(char* filename) {
     // Write deck
     Card* current = list->next;
     while (strcmp(current->ID, dummyValue) != 0) {
-        fprintf(outFile, "%s\n", current->ID);
+        fputs(current->ID, outFile);
+        fputc('\n', outFile);  // add newline
         current = current->next;
     }
 
@@ -166,6 +169,7 @@ char* SD(char* filename) {
     printf("Deck saved successfully to '%s'\n", fullpath);
     return "OK";
 }
+
 
 
 
