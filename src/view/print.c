@@ -6,6 +6,7 @@
 #include "model/deck.h"
 #include <stdio.h>
 #include <string.h>
+#include <controller/playPhase.h>
 
 #include "model/playPhaseCommands.h"
 
@@ -42,7 +43,7 @@ int PrintDeck(char lastCommand[3], char* msg) {
     return 0;
 }
 
-void PrintPlayPhase(char lastCommand[3], char* msg, char* outputString) {
+void PrintPlayPhase(char lastCommand[3], char* msg) {
     int fullyPrintedColumns = 0;
     int foundationCounter = 1;
 

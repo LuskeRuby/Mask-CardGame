@@ -5,6 +5,6 @@
 
 int PrintDeck(char* lastCommand, char* msg);
 
-void PrintPlayPhase(char* lastCommand, char* msg, char *OutputString);
+void PrintPlayPhase(char* lastCommand, char* msg);
 
 #endif //PRINT_H
