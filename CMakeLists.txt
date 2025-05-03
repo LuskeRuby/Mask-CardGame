@@ -28,6 +28,7 @@ add_executable(Mask_CardGame
         src/view/GUI.h
         src/model/playPhaseValidation.c
         src/model/playPhaseValidation.h
+        vendored/SDL
 )
 
 # Link to SDL3 library
