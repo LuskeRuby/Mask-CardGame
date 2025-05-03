@@ -55,6 +55,12 @@ void RunPlayPhase() {
 
             ExtractColumnsFromInput(input, &from, &to, 1);
 
+            // Check if the source card is facedown before allowing the move
+            if (from->prev->faceUp == 0) {
+                printf("Invalid move: card is facedown and cannot be moved.\n");
+                continue;
+            }
+
             // ensures card is in the column and return the position
             if (!IsCardInSourceColumn(from, moveCardID, &count)) {
                 printf("Card not found in source column.\n");
