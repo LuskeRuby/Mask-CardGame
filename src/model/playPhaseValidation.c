@@ -2,10 +2,7 @@
 
 #include <string.h>
 
-#include "playPhaseCommands.h"
-
-//validations
-
+#include "deck.h"
 
 int ConvertRank(Card* card) {
     char rankChar = card->ID[0];
@@ -20,55 +17,42 @@ int ConvertRank(Card* card) {
     return -1; // Error
 }
 
-// Validates if a move uses multi-card syntax and if it is legal for columns only
-int IsMultiCardMoveToOrFromFoundation(const char* input) {
-    return (input[0] == 'F' || input[7] == 'F');
-}
-
-// Validates if a card is a valid multi-card source
 int IsCardInSourceColumn(Card* fromArr, const char* cardID, int* countToCard) {
-    Card* iter = fromArr->prev;
     *countToCard = 0;
-
-    while (strcmp(iter->ID, "00") != 0) {
+    for (Card* curr = fromArr->prev; strcmp(curr->ID, "00") != 0; curr = curr->prev) {
         (*countToCard)++;
-        if (strcmp(iter->ID, cardID) == 0) {
+        if (strcmp(curr->ID, cardID) == 0) {
             return 1;
         }
-        iter = iter->prev;
     }
     return 0;
 }
 
-// Validates column-to-column rules
-int IsValidColumnToColumnMove(Card* moving, Card* target) {
+
+// Validates move between two columns
+int IsValidMoveBetweenColumns(Card* moving, Card* target) {
     int mRank = ConvertRank(moving);
     int tRank = ConvertRank(target);
     char mSuit = moving->ID[1];
     char tSuit = target->ID[1];
 
     if (strcmp(target->ID, "00") == 0) {
-        return mRank == 13; // Only King
+        return mRank == 13; // Only King can go to an empty column
     }
-    return (mRank + 1 == tRank) && (mSuit != tSuit);
+    return (mRank + 1 == tRank) && (mSuit != tSuit); // Must be one rank lower, and different suit
 }
 
-// Validates column-to-foundation move
-int IsValidColumnToFoundationMove(Card* moving, Card* target) {
+// Validates move from column to foundation
+int IsValidMoveToFoundationFromColumn(Card* moving, Card* target) {
     int mRank = ConvertRank(moving);
     int tRank = ConvertRank(target);
     char mSuit = moving->ID[1];
     char tSuit = target->ID[1];
 
     if (strcmp(target->ID, "00") == 0) {
-        return mRank == 1; // Ace
+        return mRank == 1; // Ace must be placed on an empty foundation
     }
-    return (mSuit == tSuit) && (mRank == tRank + 1);
-}
-
-// Validates foundation-to-column move
-int IsValidFoundationToColumnMove(Card* moving, Card* target) {
-    return IsValidColumnToColumnMove(moving, target);
+    return (mSuit == tSuit) && (mRank == tRank + 1); // Same suit, and one rank higher
 }
 
 // Ensures the card being moved is top and face-up

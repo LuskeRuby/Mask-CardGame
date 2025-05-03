@@ -45,16 +45,19 @@ void InitArray() {
         k--; //Make the next iterated col turn an additional card facedown
     }
 }
+
 //Extract column data from input has different reading based on if HasCardID = 0 or 1.
 void ExtractColumnsFromInput(char *input, Card** fromArr, Card** toArr, char HasCardID) {
     //first assign readable variable names to the data (ColNr are typecast to int)
-    char fromColType = input[0]; int fromColNr = (int)(input[1]-'0');
-    char toColType; int toColNr;
+    char fromColType = input[0];            // e.g., 'C' from "C1..."
+    int fromColNr = (int)(input[1]-'0');    // e.g., 1 from "C1" → converts char to int
+    char toColType; int toColNr;            // destination type and number
+
     //Different reading if HasCardID = 0 or 1.
-    if (HasCardID == 1) { //Inputtype: XX:YY->ZZ
+    if (HasCardID == 1) {               // Inputtype: XX:YY->ZZ
         toColType = input[7];
         toColNr = (int)(input[8]-'0');
-    } else if (HasCardID == 0) { //Inputtype: XX->ZZ
+    } else if (HasCardID == 0) {        //Inputtype: XX->ZZ
         toColType = input[4];
         toColNr = (int)(input[5]-'0');
     }
