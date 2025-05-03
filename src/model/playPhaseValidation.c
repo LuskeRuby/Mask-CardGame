@@ -17,6 +17,7 @@ int ConvertRank(Card* card) {
     return -1; // Error
 }
 
+// ensured card is in the column and count to its position
 int IsCardInSourceColumn(Card* fromArr, const char* cardID, int* countToCard) {
     *countToCard = 0;
     for (Card* curr = fromArr->prev; strcmp(curr->ID, "00") != 0; curr = curr->prev) {
@@ -29,33 +30,38 @@ int IsCardInSourceColumn(Card* fromArr, const char* cardID, int* countToCard) {
 }
 
 
-// Validates move between two columns
-int IsValidMoveBetweenColumns(Card* moving, Card* target) {
+
+// Returns 1 if the move is valid according to rules, 0 otherwise.
+int IsValidMove(Card* moving, Card* target, char fromType, char toType) {
     int mRank = ConvertRank(moving);
     int tRank = ConvertRank(target);
     char mSuit = moving->ID[1];
     char tSuit = target->ID[1];
 
-    if (strcmp(target->ID, "00") == 0) {
-        return mRank == 13; // Only King can go to an empty column
+    // Column → Column
+    if (fromType == 'C' && toType == 'C') {
+        if (strcmp(target->ID, "00") == 0) {
+            return mRank == 13; // Only King can go to empty column
+        }
+        return (mRank + 1 == tRank) && (mSuit != tSuit); // One rank lower, different suit
     }
-    return (mRank + 1 == tRank) && (mSuit != tSuit); // Must be one rank lower, and different suit
-}
 
-// Validates move from column to foundation
-int IsValidMoveToFoundationFromColumn(Card* moving, Card* target) {
-    int mRank = ConvertRank(moving);
-    int tRank = ConvertRank(target);
-    char mSuit = moving->ID[1];
-    char tSuit = target->ID[1];
-
-    if (strcmp(target->ID, "00") == 0) {
-        return mRank == 1; // Ace must be placed on an empty foundation
+    // Column → Foundation
+    if (fromType == 'C' && toType == 'F') {
+        if (strcmp(target->ID, "00") == 0) {
+            return mRank == 1; // Only Ace can go to empty foundation
+        }
+        return (mSuit == tSuit) && (mRank == tRank + 1); // Same suit, one rank higher
     }
-    return (mSuit == tSuit) && (mRank == tRank + 1); // Same suit, and one rank higher
-}
 
-// Ensures the card being moved is top and face-up
-int IsTopFaceUpCard(Card* fromArr, Card* card) {
-    return card == fromArr->prev && card->faceUp != 0 && strcmp(card->ID, "00") != 0;
+    // Foundation → Column
+    if (fromType == 'F' && toType == 'C') {
+        if (strcmp(target->ID, "00") == 0) {
+            return mRank == 13; // Only King can go to empty column
+        }
+        return (mRank + 1 == tRank) && (mSuit != tSuit); // One rank lower, different suit
+    }
+
+    // Other moves are invalid (e.g., F → F not allowed)
+    return 0;
 }
