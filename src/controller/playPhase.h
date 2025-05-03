@@ -5,6 +5,8 @@
 #ifndef PLAY_H
 #define PLAY_H
 #define PRINT_H
+//Global var
+extern char outputString[500];
 
 //PlayPhase Functions
 void RunPlayPhase();

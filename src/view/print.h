@@ -3,8 +3,8 @@
 #define PRINT_H
 
 
-int PrintDeck(char lastCommand[3], char* msg);
+int PrintDeck(char* lastCommand, char* msg);
 
-void PrintPlayPhase(char lastCommand[3], char* msg);
+void PrintPlayPhase(char* lastCommand, char* msg);
 
 #endif //PRINT_H

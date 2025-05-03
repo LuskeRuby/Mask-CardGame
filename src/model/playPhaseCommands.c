@@ -10,6 +10,7 @@
 Card* columnArr[7];
 Card* foundationArr[4];
 
+
 void InitArray() {
     //Populate colum and foundation arrays with dummyvalues.
     for (int i = 0; i < 7; i++) {
@@ -44,16 +45,19 @@ void InitArray() {
         k--; //Make the next iterated col turn an additional card facedown
     }
 }
+
 //Extract column data from input has different reading based on if HasCardID = 0 or 1.
 void ExtractColumnsFromInput(char *input, Card** fromArr, Card** toArr, char HasCardID) {
     //first assign readable variable names to the data (ColNr are typecast to int)
-    char fromColType = input[0]; int fromColNr = (int)(input[1]-'0');
-    char toColType; int toColNr;
+    char fromColType = input[0];            // e.g., 'C' from "C1..."
+    int fromColNr = (int)(input[1]-'0');    // e.g., 1 from "C1" → converts char to int
+    char toColType; int toColNr;            // destination type and number
+
     //Different reading if HasCardID = 0 or 1.
-    if (HasCardID == 1) { //Inputtype: XX:YY->ZZ
+    if (HasCardID == 1) {               // Inputtype: XX:YY->ZZ
         toColType = input[7];
         toColNr = (int)(input[8]-'0');
-    } else if (HasCardID == 0) { //Inputtype: XX->ZZ
+    } else if (HasCardID == 0) {        //Inputtype: XX->ZZ
         toColType = input[4];
         toColNr = (int)(input[5]-'0');
     }
@@ -69,19 +73,6 @@ void ExtractColumnsFromInput(char *input, Card** fromArr, Card** toArr, char Has
     } else {
         *toArr = foundationArr[toColNr-1];
     }
-}
-
-int ConvertRank(Card* card) {
-    char rankChar = card->ID[0];
-    if (rankChar >= '2' && rankChar <= '9') {
-        return rankChar - '0'; }
-    if (rankChar == 'A') { return 1;  }
-    if (rankChar == 'T') { return 10; }
-    if (rankChar == 'J') { return 11; }
-    if (rankChar == 'Q') { return 12; }
-    if (rankChar == 'K') { return 13; }
-
-    return -1; // Error
 }
 
 
