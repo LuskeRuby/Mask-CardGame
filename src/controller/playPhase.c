@@ -32,10 +32,11 @@ void RunPlayPhase() {
             input[i] = toupper(input[i]);
         }
 
+
         if (strcmp(input, "Q") == 0) {
             printf("Returned to startupPhase.\n");
             RunStartupPhase();
-            return; // Important: exit loop after returning
+            return;
         }
 
         // Handle multi-card column-to-column move: e.g., "C1:4H->C3"
@@ -54,6 +55,7 @@ void RunPlayPhase() {
 
             ExtractColumnsFromInput(input, &from, &to, 1);
 
+            // ensures card is in the column and return the position
             if (!IsCardInSourceColumn(from, moveCardID, &count)) {
                 printf("Card not found in source column.\n");
                 continue;
@@ -63,14 +65,14 @@ void RunPlayPhase() {
             for (int i = 1; i < count; ++i) {    // Go to the count provided
                 moving = moving->prev;
             }
-
             Card *target = to->prev;
 
-            if (!IsValidMoveBetweenColumns(moving, target)) {
+            if (!IsValidMove(moving, target, 'C', 'C')) {
                 printf("Invalid move: must be one rank lower and not same suit.\n");
                 continue;
             }
 
+            // Move it
             MoveTopCards(&from, &to, count);
 
             // If top card is now facedown, flip it
@@ -83,42 +85,45 @@ void RunPlayPhase() {
 
         // Handle single-card move: e.g., "F1->C3", "C1->F2", "C2->C3"
         else if (input[2] == '-' && input[3] == '>') {
-            Card *from, *to;
+
+            // Illegal to move multiple cards between foundations
+            if (input[0] == 'F' || input[7] == 'F') {
+                printf("Invalid: can only move top card to/from foundation.\n");
+                continue;
+            }
+
+            Card *from, *to; // Declarations for later use
             ExtractColumnsFromInput(input, &from, &to, 0);
 
             Card *moving = from->prev;
             Card *target = to->prev;
 
-            if (!IsTopFaceUpCard(from, moving)) {
-                printf("Invalid: only top, face-up cards can be moved.\n");
-                continue;
-            }
-
             char fromType = input[0];
             char toType = input[4];
             int valid = 0;
 
-            if (fromType == 'F' && toType == 'C') {
-                valid = IsValidMoveToFoundationFromColumn(moving, target);
-                if (!valid) printf("Invalid move from foundation: must be one rank lower and not same suit.\n");
-            }
-            else if (fromType == 'C' && toType == 'F') {
-                valid = IsValidMoveToFoundationFromColumn(moving, target);
-                if (!valid) printf("Invalid move to foundation: must be same suit and one rank higher.\n");
-            }
-            else if (fromType == 'C' && toType == 'C') {
-                valid = IsValidMoveBetweenColumns(moving, target);
-                if (!valid) printf("Invalid move: must be one rank lower and not same suit.\n");
-            }
-            else {
-                printf("Invalid move type.\n");
+
+            // Check validity of the move using the helper function
+            valid = IsValidMove(moving, target, fromType, toType);
+
+            if (!valid) {
+                // Detailed error messages based on move type
+                if (fromType == 'C' && toType == 'F') {
+                    printf("Invalid move to foundation: must be same suit and one rank higher.\n");
+                } else if (fromType == 'F' && toType == 'C') {
+                    printf("Invalid move from foundation: must be one rank lower and different suit.\n");
+                } else if (fromType == 'C' && toType == 'C') {
+                    printf("Invalid move between columns: must be one rank lower and different suit.\n");
+                } else {
+                    printf("Invalid move type.\n");
+                }
                 continue;
             }
 
-            if (!valid) continue;
-
+            // Move the cards
             MoveTopCards(&from, &to, 1);
 
+            // If the top card is now face-down, flip it
             if (from->prev->faceUp == 0 && strcmp(from->prev->ID, "00") != 0) {
                 from->prev->faceUp = 1;
             }

@@ -11,7 +11,6 @@
 
 
 
-
 SDL_AppInit_func (start);
 
 SDL_AppEvent_func(press);
