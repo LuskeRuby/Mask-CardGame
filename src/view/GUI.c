@@ -4,12 +4,27 @@
 
 
 #include "GUI.h"
+
+#include <controller/startupPhase.h>
+
+#include "model/playPhaseCommands.h"
+#include "model/StartPhaseCommands.h"
+
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
 {
+    LD(NULL);
+    InitArray();
+    Card* k1 = columnArr[0];
+    Card* k2 = columnArr[1];
+    Card* k3 = columnArr[2];
+    Card* k4 = columnArr[3];
+    Card* k5 = columnArr[4];
+    Card* k6 = columnArr[5];
+    Card* k7 = columnArr[6];
     /* Create the window */
     if (!SDL_CreateWindowAndRenderer("Hello World", 800, 600, SDL_WINDOW_MAXIMIZED, &window, &renderer)) {
         SDL_Log("Couldn't create window and renderer: %s", SDL_GetError());
@@ -31,7 +46,8 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
 /* This function runs once per frame, and is the heart of the program. */
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
-    const char *message = "Hello world!";
+    const char *message = "C1\tC2\td2";
+
     int w = 0, h = 0;
     float x, y;
     const float scale = 4.0f;
@@ -48,7 +64,6 @@ SDL_AppResult SDL_AppIterate(void *appstate)
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderDebugText(renderer, x, y, message);
     SDL_RenderPresent(renderer);
-
     return SDL_APP_CONTINUE;
 }
 
