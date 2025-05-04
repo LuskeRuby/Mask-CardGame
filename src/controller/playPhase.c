@@ -92,12 +92,6 @@ void RunPlayPhase() {
         // Handle single-card move: e.g., "F1->C3", "C1->F2", "C2->C3"
         else if (input[2] == '-' && input[3] == '>') {
 
-            // Illegal to move multiple cards between foundations
-            if (input[0] == 'F' || input[7] == 'F') {
-                printf("Invalid: can only move top card to/from foundation.\n");
-                continue;
-            }
-
             Card *from, *to; // Declarations for later use
             ExtractColumnsFromInput(input, &from, &to, 0);
 
