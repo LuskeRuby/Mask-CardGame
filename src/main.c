@@ -1,29 +1,22 @@
+#include <controller/playPhase.h>
+
 #include "controller/startupPhase.h"
 #include "model/playPhaseCommands.h"
 #include "model/StartPhaseCommands.h"
 
-//USED FOR TEST (DELETE BEFORE SUBMISSION)
 /*
 int main(void) {
     LD(NULL);
-    InitArray();
-    Card* k1 = columnArr[0];
-    Card* k2 = columnArr[1];
-    Card* k3 = columnArr[2];
-    Card* k4 = columnArr[3];
-    Card* k5 = columnArr[4];
-    Card* k6 = columnArr[5];
-    Card* k7 = columnArr[6];
-
     RunStartupPhase();
-
-    //MoveTopCards(&columnArr[1],&columnArr[0],5);
-    PrintPlayPhase("ok", "ok");
 }
 */
+
+
 #include <stdio.h>
 #include <string.h>
 #include <winsock2.h>
+#include <view/print.h>
+#include <view/print.h>
 #pragma comment(lib, "ws2_32.lib")  // Link Winsock library
 
 #define PORT 12345
@@ -98,8 +91,14 @@ int main() {
             command++;  // Skip leading spaces or newline characters
         }
 
+
         // Prepare a response to send back
-        char *response = "C1\tC2\tC3\tC4\tC5\tC6\tC7\nAC\t[]\t[]\t[]\t[]\t[]\t[]\t\t[]\tF1\n\t[]\t[]\t[]\t[]\t[]\t[]\t\t[]\tF2\n\t[]\t[]\t[]\t[]\t[]\t[]\t\t[]\tF3\n\t[]\t[]\t[]\t[]\t[]\t[]\t\t[]\tF4\n\nLAST Command: ok\nMessage: Everything is fine\nEND\n";
+        LD(NULL); //SLET DETTE VIKTOR, (BRUGES TIL AT TESTE OUTPUTSTRINg)
+        SW();   //SLET DETTE VIKTOR, (BRUGES TIL AT TESTE OUTPUTSTRINg)
+        PrintStartupPhase(command, buffer); //SLET DETTE VIKTOR, (BRUGES TIL AT TESTE OUTPUTSTRINg)
+
+        strcat(outputString, "END\n"); //VIGTIGT AT DER CONCATES MED END FØR VI KA SENDE OVER
+        char *response = outputString;
 
         // Send response back to the client after processing each command
         printf("Sending response: '%s'\n", response);  // Log the response being sent

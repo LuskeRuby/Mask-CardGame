@@ -23,6 +23,4 @@ int DeleteCard(char *cardID, Card **list);
 void MoveTopCards(Card** fromPile, Card** toPile, int amount);
 int SizeOfDeck(Card** deck);
 
-//----remove card
-
 #endif //CARD_H

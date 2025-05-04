@@ -9,7 +9,8 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
-#include "deck.h"
+#include <controller/playPhase.h>
+
 
 Card* BuildLinkedListFromFile(FILE* stream) {
     if (stream == NULL) return NULL;
@@ -103,7 +104,7 @@ int LDValidation(Card* deckToValidate) {
     Card* current = deckToValidate->next;
     int cardCount = 0;
 
-    // Traverse the entire circular list (skip dummy at start)
+    // Traverse the entire list (skip dummy at start)
     while (strcmp(current->ID, dummyValue) != 0 && cardCount < 52) {
         // Try to delete this card from the reference deck
         if (DeleteCard(current->ID, &defaultDeck) == -1) {
@@ -114,13 +115,13 @@ int LDValidation(Card* deckToValidate) {
         cardCount++;
     }
 
-    // Check if exactly 52 cards were present
+    // Check if exactly 52 cards
     if (cardCount != 52) {
         printf("Error: Deck does not contain exactly 52 cards (found %d).\n", cardCount);
         return 0;
     }
 
-    return 1; // All good!
+    return 1; // All good
 }
 
 

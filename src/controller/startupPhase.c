@@ -33,7 +33,7 @@ void RunStartupPhase() {
             char* result = LD(NULL);
             if (strcmp(result, "OK") == 0) {
                 printf("Default deck loaded.\n");
-                PrintDeck("LD", "OK");
+                PrintStartupPhase("LD", "OK");
             } else {
                 printf("Error loading default deck.\n");
             }
@@ -42,12 +42,12 @@ void RunStartupPhase() {
         } else if (strncmp(input, "LD ", 3) == 0) {
             char filename[80];
             strcpy(filename, input + 3);  // Copy everything after "LD "
-            filename[79] = '\0';  // Make sure it is null-terminated (for safety)
+            filename[79] = '\0';  // Make sure it is null-terminated
 
             char* result = LD(filename);
             if (strcmp(result, "OK") == 0) {
                 printf("Deck '%s' loaded.\n", filename);
-                PrintDeck("LD", "OK");
+                PrintStartupPhase("LD", "OK");
             } else {
                 printf("Error loading deck '%s'.\n", filename);
             }
@@ -55,46 +55,46 @@ void RunStartupPhase() {
 
         } else if (strcmp(input, "SW") == 0) {
             SW();
-            PrintDeck("SW", "OK");
+            PrintStartupPhase("SW", "OK");
 
             //SI pick a random number
-        } else if (strcmp(input, "SI") == 0) { //will crash if LIST not initialized
+        } else if (strcmp(input, "SI") == 0) {
             SI(0);
-            PrintDeck("SI", "OK");
+            PrintStartupPhase("SI", "OK");
 
         } else if (strncmp(input, "SI ", 3) == 0) {
-            int split = atoi(input + 3); // Parse after "SI "
+            int split = atoi(input + 3); // convert string to int, Parse after "SI "
 
             if (split > 1 && split < 52) {
                 SI(split);
-                PrintDeck("SI", "OK");
+                PrintStartupPhase("SI", "OK");
             } else {
                 printf("Must provide a number between 1 and 52.\n");
             }
 
 
-        } else if (strcmp(input, "SR") == 0) {   //will crash if LIST not initialized
+        } else if (strcmp(input, "SR") == 0) {
             SR();
-            PrintDeck("SR", "OK");
+            PrintStartupPhase("SR", "OK");
 
         } else if (strcmp(input, "SD") == 0) {
             char* result = SD(NULL);
             if (strcmp(result, "OK") == 0) {
                 printf("Deck '%s' Saved.\n", "cards.txt");
-                PrintDeck("SD", "OK");
+                PrintStartupPhase("SD", "OK");
             } else {
                 printf("Error saving default deck.\n");
             }
 
         } else if (strncmp(input, "SD ", 3) == 0) {
             char filename[80];
-            strcpy(filename, input + 3);  // Copy everything after "SD "
+            strcpy(filename, input + 3);  // Copy everything after "SD"
             filename[79] = '\0';
 
             char* result = SD(filename);
             if (strcmp(result, "OK") == 0) {
                 printf("Deck '%s' Saved.\n", filename);
-                PrintDeck("SD", "OK");
+                PrintStartupPhase("SD", "OK");
             } else {
                 printf("Error saving deck '%s'.\n", filename);
             }

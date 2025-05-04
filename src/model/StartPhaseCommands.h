@@ -12,7 +12,7 @@ char* LD(); //Filename not provided
 char* LD(char* filename);
 int LDValidation(Card* Deck);
 char* SD(char* filename);
-void SI(int split); //Fix overloading!!!!
+void SI(int split);
 void SR();
 void SW();
 

@@ -10,36 +10,50 @@
 
 #include "model/playPhaseCommands.h"
 
-int PrintDeck(char lastCommand[3], char* msg) {
+int PrintStartupPhase(char lastCommand[3], char* msg) {
     Card* current = list->next;  // skip dummy node
     int columnCounter = 0;
     int foundationCounter = 1;
 
-    printf("C1\tC2\tC3\tC4\tC5\tC6\tC7\n\n");
+    // reset Outpurstring
+    outputString[0] = '\0';
+    strcat(outputString, "C1\tC2\tC3\tC4\tC5\tC6\tC7\n\n");
 
     while (strcmp(current->ID, dummyValue) != 0) {
         if (current->faceUp == 1) {
-            printf("%2s\t", current->ID);  // face up
+            strcat(outputString, current->ID);  // face up
+            strcat(outputString, "\t");
         } else {
-            printf("%2s\t", "[]");        // face down
+            strcat(outputString, "[]\t"); // face down
         }
 
         columnCounter++;
+
         if (columnCounter == 7) {
             if (foundationCounter < 5) {
-                printf("\t[]\tF%d", foundationCounter);
+                strcat(outputString, "\t[]\tF"); //Foundation always facedown in startupphase
+                char fCount[3];
+                sprintf(fCount, "%d", foundationCounter); //Convert int to string
+                strcat(outputString, fCount);
                 foundationCounter++;
             }
             printf("\n");
             columnCounter = 0;
+            strcat(outputString, "\n");
         }
 
         current = current->next;
     }
+    //last command and message
+    strcat(outputString, "\n\nLAST Command: ");
+    strcat(outputString, lastCommand);
+    strcat(outputString, "\n");
 
-    printf("\n\nLAST Command: %s\n", lastCommand);
-    printf("Message: %s\n", msg);
+    strcat(outputString, "Message: ");
+    strcat(outputString, msg);
+    strcat(outputString, "\n");
 
+    printf("%s", outputString); // Print the string
     return 0;
 }
 
@@ -53,7 +67,7 @@ void PrintPlayPhase(char lastCommand[3], char* msg) {
         tempColumnArr[i] = columnArr[i];
     }
 
-    // Ensure outputString starts as an empty string before we append to it
+    // reset Outpurstring
     outputString[0] = '\0';
 
     // Append header to the output string (but do NOT print)
@@ -101,7 +115,7 @@ void PrintPlayPhase(char lastCommand[3], char* msg) {
         strcat(outputString, "\n");
     }
 
-    // Capture the last command and message
+    //last command and message
     strcat(outputString, "\n\nLAST Command: ");
     strcat(outputString, lastCommand);
     strcat(outputString, "\n");
@@ -111,5 +125,5 @@ void PrintPlayPhase(char lastCommand[3], char* msg) {
     strcat(outputString, "\n");
 
     //PRINT STRING
-    printf("Captured Output:\n%s", outputString); // Print the full captured string after the function call
+    printf("%s", outputString); // Print string
 }
