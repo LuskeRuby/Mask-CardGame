@@ -22,3 +22,6 @@ add_executable(Mask_CardGame
         src/model/playPhaseValidation.c
         src/model/playPhaseValidation.h
 )
+
+# Link against the Winsock library
+target_link_libraries(Mask_CardGame ws2_32)

@@ -85,7 +85,7 @@ void PrintPlayPhase(char lastCommand[3], char* msg) {
             if (strcmp(foundationArr[foundationCounter - 1]->prev->ID, "00") == 0) { // if empty deck print []
                 strcat(outputString, "\t[]\tF");
                 char fCount[3];
-                sprintf(fCount, "%d", foundationCounter);
+                sprintf(fCount, "%d", foundationCounter); //Convert int to string
                 strcat(outputString, fCount);
             } else {
                 // print id of top card
@@ -93,12 +93,11 @@ void PrintPlayPhase(char lastCommand[3], char* msg) {
                 strcat(outputString, foundationArr[foundationCounter - 1]->prev->ID);
                 strcat(outputString, "\tF");
                 char fCount[3];
-                sprintf(fCount, "%d", foundationCounter);
+                sprintf(fCount, "%d", foundationCounter); //Convert int to string
                 strcat(outputString, fCount);
             }
             foundationCounter++;
         }
-
         strcat(outputString, "\n");
     }
 

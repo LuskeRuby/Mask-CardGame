@@ -22,6 +22,7 @@ void RunPlayPhase() {
     InitArray();
     PrintPlayPhase("P", "ok");
 
+
     while (1) {
         printf("INPUT > ");
         fgets(input, sizeof(input), stdin);
