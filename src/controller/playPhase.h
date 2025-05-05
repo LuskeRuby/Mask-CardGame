@@ -9,8 +9,8 @@
 extern char outputString[500];
 
 //PlayPhase Functions
-void RunPlayPhase();
-void RunStartupPhase();
+void RunPlayPhase(const char* input);
+void RunStartupPhase(const char* input);
 
 
 

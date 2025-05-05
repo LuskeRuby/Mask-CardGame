@@ -99,6 +99,9 @@ void RunStartupPhase(const char* input) {
     } else if (strcmp(command, "P") == 0) {
         // Transition to PlayPhase
         currentPhase = PLAY_PHASE;
+        InitArray();
+        PrintPlayPhase("P", "ok");
+
     } else {
 
         PrintStartupPhase(command, "Unknown command.\n");

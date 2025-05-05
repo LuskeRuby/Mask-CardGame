@@ -4,68 +4,86 @@
 #include <stdio.h>
 #include <string.h>
 #include <model/deck.h>
-#include "view/print.h"
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
+#include <view/PRINT.H>
 
+#include <view/print.h>
+
+#include "startupPhase.h"
 #include "model/playPhaseCommands.h"
 #include "model/playPhaseValidation.h"
 
 
 char outputString[500]; // Initialize String sent to GUI
 
-
-void RunPlayPhase() {
+void RunPlayPhase(const char* input) {
     outputString[0] = '\0';
-    char input[100];
+    //char input[100];
+    char command[100];
+    strcpy(command, input);
 
-    printf(">>play phase<<. Enter Commands ('Q' to return to the startup Phase):\n");
+    // Make first two letters uppercase
+    for (int i = 0; i < 2 && command[i]; i++) {
+        command[i] = toupper(command[i]);
+    }
 
-    InitArray();
-    PrintPlayPhase("P", "ok");
-
-
-    while (1) {
+/*
         printf("INPUT > ");
         fgets(input, sizeof(input), stdin);
         input[strcspn(input, "\n")] = '\0'; // Strip newline
-
+*/
         // Make first two letters uppercase
-        for (int i = 0; i < 2 && input[i]; i++) {
-            input[i] = toupper(input[i]);
+        for (int i = 0; i < 9; i++) {
+            command[i] = toupper(command[i]);
         }
 
 
-        if (strcmp(input, "Q") == 0) {
-            printf("Returned to startupPhase.\n");
-            RunStartupPhase();
+        if (strcmp(command, "Q") == 0) {
+            currentPhase=STARTUP_PHASE;
+            PrintStartupPhase("Q", "Returned to startupPhase.\n");
             return;
         }
 
         // Handle multi-card column-to-column move: e.g., "C1:4H->C3"
-        if (input[2] == ':') {
+        if (command[2] == ':') {
 
             // Illegal to move multiple cards between foundations
-            if (input[0] == 'F' || input[7] == 'F') {
-                printf("Invalid: can only move top card to/from foundation.\n");
-                continue;
+            if (command[0] == 'F' || command[7] == 'F') {
+                PrintPlayPhase(command, "Invalid: can only move top card to/from foundation.\n");
+                return;
             }
 
             // Extract the card to move
-            char moveCardID[3] = { input[3], input[4], '\0' };
+            char moveCardID[3] = { command[3], command[4], '\0' };
             Card* from; Card* to; // Declarations for later use
             int count = 0;
 
-            ExtractColumnsFromInput(input, &from, &to, 1);
+            ExtractColumnsFromInput(command, &from, &to, 1);
 
             // Check if the source card is facedown before allowing the move
             if (from->prev->faceUp == 0) {
-                printf("Invalid move: card is facedown and cannot be moved.\n");
-                continue;
+                PrintPlayPhase(command, "Invalid move: card is facedown and cannot be moved.\n");
+                return;
             }
 
             // ensures card is in the column and return the position
             if (!IsCardInSourceColumn(from, moveCardID, &count)) {
-                printf("Card not found in source column.\n");
-                continue;
+                PrintPlayPhase(command, "Card not found in source column.\n");
+                return;
             }
 
             Card *moving = from->prev;
@@ -75,8 +93,8 @@ void RunPlayPhase() {
             Card *target = to->prev;
 
             if (!IsValidMove(moving, target, 'C', 'C')) {
-                printf("Invalid move: must be one rank lower and not same suit.\n");
-                continue;
+                PrintPlayPhase(command, "Invalid move: must be one rank lower and not same suit.\n");
+                return;
             }
 
             // Move it
@@ -87,20 +105,20 @@ void RunPlayPhase() {
                 from->prev->faceUp = 1;
             }
 
-            PrintPlayPhase(input, "ok");
+            PrintPlayPhase(command, "ok");
         }
 
         // Handle single-card move: e.g., "F1->C3", "C1->F2", "C2->C3"
-        else if (input[2] == '-' && input[3] == '>') {
+        else if (command[2] == '-' && command[3] == '>') {
 
             Card *from, *to; // Declarations for later use
-            ExtractColumnsFromInput(input, &from, &to, 0);
+            ExtractColumnsFromInput(command, &from, &to, 0);
 
             Card *moving = from->prev;
             Card *target = to->prev;
 
-            char fromType = input[0];
-            char toType = input[4];
+            char fromType = command[0];
+            char toType = command[4];
             int valid = 0;
 
 
@@ -110,15 +128,18 @@ void RunPlayPhase() {
             if (!valid) {
                 // Detailed error messages based on move type
                 if (fromType == 'C' && toType == 'F') {
-                    printf("Invalid move to foundation: must be same suit and one rank higher.\n");
+                    PrintPlayPhase(command, "Invalid move to foundation: must be same suit and one rank higher.\n");
+                    return;
                 } else if (fromType == 'F' && toType == 'C') {
-                    printf("Invalid move from foundation: must be one rank lower and different suit.\n");
+                    PrintPlayPhase(command, "Invalid move from foundation: must be one rank lower and different suit.\n");
+                    return;
                 } else if (fromType == 'C' && toType == 'C') {
-                    printf("Invalid move between columns: must be one rank lower and different suit.\n");
+                    PrintPlayPhase(command, "Invalid move between columns: must be one rank lower and different suit.\n");
+                    return;
                 } else {
-                    printf("Invalid move type.\n");
+                    PrintPlayPhase(command, "Invalid move type.\n");
+                    return;
                 }
-                continue;
             }
 
             // Move the cards
@@ -129,22 +150,22 @@ void RunPlayPhase() {
                 from->prev->faceUp = 1;
             }
 
-            PrintPlayPhase(input, "ok");
+            PrintPlayPhase(command, "ok");
         }
 
         // Disallowed commands in play phase
-        else if (strncmp(input, "LD", 2) == 0 ||
-                 strncmp(input, "SD", 2) == 0 ||
-                 strcmp(input, "SW") == 0 ||
-                 strncmp(input, "SI", 2) == 0 ||
-                 strcmp(input, "SR") == 0 ||
-                 strcmp(input, "QQ") == 0) {
-            printf("Command not available in the PLAY phase\n");
+        else if (strncmp(command, "LD", 2) == 0 ||
+                 strncmp(command, "SD", 2) == 0 ||
+                 strcmp(command, "SW") == 0 ||
+                 strncmp(command, "SI", 2) == 0 ||
+                 strcmp(command, "SR") == 0 ||
+                 strcmp(command, "QQ") == 0) {
+            PrintPlayPhase(command, "Command not available in the PLAY phase\n");
         }
 
         // Unknown command
         else {
-            printf("Unknown command\n");
+            PrintPlayPhase(command, "Unknown command\n");
         }
-    }
+
 }

@@ -126,4 +126,5 @@ void PrintPlayPhase(char lastCommand[3], char* msg) {
 
     //PRINT STRING
     printf("%s", outputString); // Print string
+    return 0;
 }

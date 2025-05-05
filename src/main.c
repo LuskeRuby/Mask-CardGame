@@ -70,8 +70,6 @@ int main() {
         WSACleanup();
         return 1;
     }
-
-
     LD(NULL);
     // Continuously receive and process commands
     while (1) {
@@ -97,7 +95,7 @@ int main() {
         if (currentPhase == STARTUP_PHASE) {
             RunStartupPhase(command);  // run Startup Phase
         } else if (currentPhase == PLAY_PHASE) {
-            RunPlayPhase();  // run Play Phase
+            RunPlayPhase(command);  // run Play Phase
         }
 
 
