@@ -6,108 +6,101 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "playPhase.h"
 #include "model/playPhaseCommands.h"
 #include "model/StartPhaseCommands.h"
 
+Phase currentPhase = STARTUP_PHASE;  // Init
 
-void RunStartupPhase() {
-    char input[100];
+void RunStartupPhase(const char* input) {
+    // Make a copy of the input to process
+    char msgPrint[100] = ""; //needed msg's that require sprintf
+    char command[100];
+    strcpy(command, input);
 
-    printf("Enter commands (type 'LD' to load, 'P' to enter StartPhase, 'QQ' to quit):\n");
+    // Make first two letters uppercase
+    for (int i = 0; i < 2 && command[i]; i++) {
+        command[i] = toupper(command[i]);
+    }
 
-    while (1) {
-        printf("INPUT > ");
-        fgets(input, sizeof(input), stdin);
-        input[strcspn(input, "\n")] = 0; // Remove trailing newline
-
-        // Make first two letters uppercase
-        for (int i = 0; i < 2 && input[i]; i++) {
-            input[i] = toupper(input[i]);
-        }
-
-
-        // All commands packed in if/else statements
-
-        // LD default deck
-        if (strcmp(input, "LD") == 0) {
-            char* result = LD(NULL);
-            if (strcmp(result, "OK") == 0) {
-                printf("Default deck loaded.\n");
-                PrintStartupPhase("LD", "OK");
-            } else {
-                printf("Error loading default deck.\n");
-            }
-
-            // LD filename
-        } else if (strncmp(input, "LD ", 3) == 0) {
-            char filename[80];
-            strcpy(filename, input + 3);  // Copy everything after "LD "
-            filename[79] = '\0';  // Make sure it is null-terminated
-
-            char* result = LD(filename);
-            if (strcmp(result, "OK") == 0) {
-                printf("Deck '%s' loaded.\n", filename);
-                PrintStartupPhase("LD", "OK");
-            } else {
-                printf("Error loading deck '%s'.\n", filename);
-            }
-
-
-        } else if (strcmp(input, "SW") == 0) {
-            SW();
-            PrintStartupPhase("SW", "OK");
-
-            //SI pick a random number
-        } else if (strcmp(input, "SI") == 0) {
-            SI(0);
-            PrintStartupPhase("SI", "OK");
-
-        } else if (strncmp(input, "SI ", 3) == 0) {
-            int split = atoi(input + 3); // convert string to int, Parse after "SI "
-
-            if (split > 1 && split < 52) {
-                SI(split);
-                PrintStartupPhase("SI", "OK");
-            } else {
-                printf("Must provide a number between 1 and 52.\n");
-            }
-
-
-        } else if (strcmp(input, "SR") == 0) {
-            SR();
-            PrintStartupPhase("SR", "OK");
-
-        } else if (strcmp(input, "SD") == 0) {
-            char* result = SD(NULL);
-            if (strcmp(result, "OK") == 0) {
-                printf("Deck '%s' Saved.\n", "cards.txt");
-                PrintStartupPhase("SD", "OK");
-            } else {
-                printf("Error saving default deck.\n");
-            }
-
-        } else if (strncmp(input, "SD ", 3) == 0) {
-            char filename[80];
-            strcpy(filename, input + 3);  // Copy everything after "SD"
-            filename[79] = '\0';
-
-            char* result = SD(filename);
-            if (strcmp(result, "OK") == 0) {
-                printf("Deck '%s' Saved.\n", filename);
-                PrintStartupPhase("SD", "OK");
-            } else {
-                printf("Error saving deck '%s'.\n", filename);
-            }
-
-        } else if (strcmp(input, "QQ") == 0) {
-            printf("The program exits.\n");
-            exit(0);
-
-        } else if (strcmp(input, "P") == 0) {
-            RunPlayPhase();
-
+    // Check the command and handle accordingly
+    if (strcmp(command, "LD") == 0) {
+        char* result = LD(NULL);
+        if (strcmp(result, "OK") == 0) {
+            PrintStartupPhase("LD", "Default deck loaded.\n");
         } else {
-            printf("Unknown command\n");
+            PrintStartupPhase("LD", "Error loading default deck.\n");
         }
+
+    } else if (strncmp(command, "LD ", 3) == 0) {
+        char filename[80];
+        strcpy(filename, command + 3);  // Copy everything after "LD "
+        filename[79] = '\0';  // Null terminate
+
+        char* result = LD(filename);
+        if (strcmp(result, "OK") == 0) {
+            sprintf(msgPrint, "Deck '%s' loaded.\n", filename); //make string msg
+            PrintStartupPhase("LD", msgPrint);
+        } else {
+            sprintf(msgPrint, "Error loading deck '%s'.\n", filename);
+            PrintStartupPhase("LD", msgPrint);
+        }
+
+
+
+    } else if (strcmp(command, "SW") == 0) {
+        SW();
+        PrintStartupPhase("SW", "Deck shuffled.\n");
+
+    } else if (strcmp(command, "SI") == 0) {
+        SI(0);
+        PrintStartupPhase("SI", "Deck shuffled.\n");
+
+    } else if (strncmp(command, "SI ", 3) == 0) {
+        int split = atoi(command + 3); // Convert ASCII to int (Parse after "SI ")
+        if (split > 1 && split < 52) {
+            SI(split);
+            sprintf(msgPrint, "Shuffled using pile with '%d' cards.\n", split);
+            PrintStartupPhase("SI", msgPrint);
+        } else {
+            PrintStartupPhase("SI", "Must provide a number between 1 and 52.\n");
+        }
+
+    } else if (strcmp(command, "SR") == 0) {
+        SR();
+        PrintStartupPhase("SR", "Deck reshuffled.\n");
+
+    } else if (strcmp(command, "SD") == 0) {
+        char* result = SD(NULL);
+        if (strcmp(result, "OK") == 0) {
+            PrintStartupPhase("SD", "Deck 'cards.txt' saved.\n");
+        } else {
+            PrintStartupPhase("SD", "Error saving deck.\n");
+        }
+
+    } else if (strncmp(command, "SD ", 3) == 0) {
+        char filename[80];
+        strcpy(filename, command + 3);  // Copy everything after "SD "
+        filename[79] = '\0';  // Null terminate
+
+        char* result = SD(filename);
+        if (strcmp(result, "OK") == 0) {
+            sprintf(msgPrint, "Deck '%s' saved.\n", filename);
+            PrintStartupPhase("SD", msgPrint);
+        } else {
+            sprintf(msgPrint, "Error saving deck '%s'.\n", filename);
+            PrintStartupPhase("SD", msgPrint);
+        }
+
+    } else if (strcmp(command, "QQ") == 0) {
+        PrintStartupPhase("QQ", "The program exits.\n");
+        exit(0);  // Exit the program
+
+    } else if (strcmp(command, "P") == 0) {
+        // Transition to PlayPhase
+        currentPhase = PLAY_PHASE;
+    } else {
+
+        PrintStartupPhase(command, "Unknown command.\n");
     }
 }

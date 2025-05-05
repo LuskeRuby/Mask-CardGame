@@ -54,7 +54,8 @@ public class SolitaireClient extends JFrame {
 
         new Thread(() -> {
             try {
-                out.println(command); // Send command to server
+                out.print(command); // Send command to server
+                out.flush();        // send immediately
 
                 StringBuilder response = new StringBuilder();
                 String line;

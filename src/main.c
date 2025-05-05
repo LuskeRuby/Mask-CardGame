@@ -17,6 +17,7 @@ int main(void) {
 #include <winsock2.h>
 #include <view/print.h>
 #include <view/print.h>
+#include <view/print.h>
 #pragma comment(lib, "ws2_32.lib")  // Link Winsock library
 
 #define PORT 12345
@@ -70,6 +71,8 @@ int main() {
         return 1;
     }
 
+
+    LD(NULL);
     // Continuously receive and process commands
     while (1) {
         int bytes_received = recv(client_socket, buffer, sizeof(buffer) - 1, 0);
@@ -91,13 +94,14 @@ int main() {
             command++;  // Skip leading spaces or newline characters
         }
 
+        if (currentPhase == STARTUP_PHASE) {
+            RunStartupPhase(command);  // run Startup Phase
+        } else if (currentPhase == PLAY_PHASE) {
+            RunPlayPhase();  // run Play Phase
+        }
 
-        // Prepare a response to send back
-        LD(NULL); //SLET DETTE VIKTOR, (BRUGES TIL AT TESTE OUTPUTSTRINg)
-        SW();   //SLET DETTE VIKTOR, (BRUGES TIL AT TESTE OUTPUTSTRINg)
-        PrintStartupPhase(command, buffer); //SLET DETTE VIKTOR, (BRUGES TIL AT TESTE OUTPUTSTRINg)
 
-        strcat(outputString, "END\n"); //VIGTIGT AT DER CONCATES MED END FØR VI KA SENDE OVER
+        strcat(outputString, "END\n"); //Response must be concated with end
         char *response = outputString;
 
         // Send response back to the client after processing each command

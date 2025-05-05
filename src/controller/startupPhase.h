@@ -4,11 +4,17 @@
 #include "model/deck.h"
 #include "view/PRINT.H"
 
-//Startupphase Functions
-void RunStartupPhase();
-void RunPlayPhase(void);
+// Enum to define the phases of the game
+typedef enum {
+    STARTUP_PHASE,
+    PLAY_PHASE
+} Phase;
 
-//int LD(char Filename); //Provided filename
+extern Phase currentPhase;  // Declaration of the current phase
+
+//Startupphase Functions
+void RunStartupPhase(const char* input);
+
 
 
 
