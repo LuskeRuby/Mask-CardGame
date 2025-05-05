@@ -4,23 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <model/deck.h>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-#include <view/PRINT.H>
-
 #include <view/print.h>
 
 #include "startupPhase.h"

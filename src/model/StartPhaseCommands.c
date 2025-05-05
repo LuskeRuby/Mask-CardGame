@@ -137,6 +137,7 @@ char* SD(char* filename) {
     } else if (strlen(filename) == 0) {
         printf("Error: filename must not be an empty string.\n");
         return "0";
+
     } else {
         static char finalFilename[100];
         strncpy(finalFilename, filename, sizeof(finalFilename) - 1);
