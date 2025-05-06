@@ -3,11 +3,12 @@
 #include "controller/startupPhase.h"
 #include "model/playPhaseCommands.h"
 #include "model/StartPhaseCommands.h"
+#include "view/print.h"
 
 /*
 int main(void) {
     LD(NULL);
-    RunStartupPhase();
+    PrintStartupPhase("ok","ok");
 }
 */
 
@@ -21,6 +22,7 @@ int main(void) {
 #pragma comment(lib, "ws2_32.lib")  // Link Winsock library
 
 #define PORT 12345
+
 
 int main() {
     WSADATA wsa;
