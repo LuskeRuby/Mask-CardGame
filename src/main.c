@@ -12,19 +12,21 @@ int main(void) {
 }
 */
 
-
 #include <stdio.h>
 #include <string.h>
 #include <winsock2.h>
 #include <view/print.h>
-#include <view/print.h>
-#include <view/print.h>
+
+#include "tests/tests.h"
 #pragma comment(lib, "ws2_32.lib")  // Link Winsock library
 
 #define PORT 12345
 
 
 int main() {
+
+    //RunTests();
+
     WSADATA wsa;
     SOCKET server_socket, client_socket;
     struct sockaddr_in server, client;

@@ -1,6 +1,3 @@
-//
-// Created by rubym on 24/04/2025.
-//
 
 #include "StartPhaseCommands.h"
 
@@ -10,6 +7,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <controller/playPhase.h>
+#include "deck.h"
 
 
 Card* BuildLinkedListFromFile(FILE* stream) {
@@ -34,9 +32,9 @@ Card* BuildLinkedListFromFile(FILE* stream) {
 
 
 Card* LoadDefaultDeck() {
-    FILE* inStream = fopen("data/DEFAULT.txt", "r");
+    FILE* inStream = fopen("data/default.txt", "r");
     if (inStream == NULL) {
-        printf("Error: Could not open DEFAULT.txt\n");
+        printf("Error: Could not open default.txt\n");
         return NULL;
     }
 

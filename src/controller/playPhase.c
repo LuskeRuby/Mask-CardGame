@@ -9,6 +9,7 @@
 #include "startupPhase.h"
 #include "model/playPhaseCommands.h"
 #include "model/playPhaseValidation.h"
+#include "view/print.h"
 
 
 char outputString[500]; // Initialize String sent to GUI
@@ -36,7 +37,7 @@ void RunPlayPhase(const char* input) {
 
 
         if (strcmp(command, "Q") == 0) {
-            currentPhase=STARTUP_PHASE;
+            currentPhase = STARTUP_PHASE;
             PrintStartupPhase("Q", "Returned to startupPhase.\n");
             return;
         }

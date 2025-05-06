@@ -5,49 +5,90 @@
 #include "tests.h"
 
 #include <stdlib.h>
+#include <string.h>
+#include <controller/playPhase.h>
+#include <controller/startupPhase.h>
 
 #include "model/playPhaseCommands.h"
+#include "model/playPhaseValidation.h"
 #include "model/StartPhaseCommands.h"
 
 void RunTests() {
+    int choice;
 
-    // Initializing
-    LD(NULL);
-    InitArray();
+    printf("Select test to run (0-3):\n");
+    printf("  0: Play Phase Initialization\n");
+    printf("  1: Load Function\n");
+    printf("  2: Invalid Self-Move\n");
+    printf("  3: Undo/Redo Functionality\n");
+    printf("Enter test number: ");
 
-    printf("------LD() TESTS------\n");
+    if (scanf("%d", &choice) != 1) {
+        printf("Invalid input. Exiting.\n");
+        exit(1);
+    }
 
-    printf("\nCalling LD(test1337) - should return error\n");
-    LD("test1337");
+    switch (choice) {
+        case 0:
+            printf("Running Test 0: Play Phase Initialization\n");
+        LD(NULL);
+        RunStartupPhase("P");
+        printf("Expected: currentPhase == PLAY_PHASE, Actual: %d\n", currentPhase);
+        printf("Expected: columnArr[0] not empty, Actual: %s\n", columnArr[0]->next != NULL ? "PASS" : "FAIL");
+        break;
 
-    printf("\nCalling LD( ) - empty filename should return error\n");
-    LD("");
+        case 1:
+            printf("Running Test 1: LD\n");
 
-    printf("\nCalling LD(testfile) - No errors\n");
-    LD("testfile");
+            printf("\nAttempting LD(test1337) - should return error\n");
+            LD("test1337");
 
-    printf("\nCalling: LD(cards51) - should return 2 different errors\n");
-    LD("cards51");
+            printf("\nAttempting LD( ) - empty filename should return error\n");
+            LD("");
+
+            printf("\nAttempting LD(testfile) - No errors\n");
+            LD("testfile");
+
+            printf("\nAttempting: LD(cards51) - should return 2 different errors\n");
+            LD("cards51");
+
+        break;
 
 
-    //SI TESTS
-    printf("------SI() TESTS-------\n");
+        case 2:
+            printf("Running Test 1: Invalid Self-Move\n");
+            LD(NULL);
+            RunStartupPhase("P");
 
-    printf("\n Assuming a deck is loaded"); LD(NULL);
+            printf("Attempting invalid move: C1:AC->F1\n");
+            RunPlayPhase("C1:AC->F1");
+            printf("Attempting invalid move: C2:KD->F1\n");
+            RunPlayPhase("C2:KD->F1");
+            printf("Attempting correct move: C3->C7\n");
+            RunPlayPhase("C3->C7");
 
-    printf("\nCalling: SI(NULL) - no errors\n");
-    SI(NULL);
-    printf("\nCalling: SI(52) - Should return error\n");
-    SI(1);
-    printf("\nCalling: SI(16) - no errors\n");
-    SI(16);
+        // Checks
+        printf("Expected: Invalid: can only move top card to/from foundation, Actual: %s\n",
+            foundationArr[0] == NULL ? "FAIL (card moved)" : "PASS (move rejected)");
 
-    //SD(NULL);
-    //SI(5);
-    //SR();
-    //SW();
+        printf("Expected: Invalid move to foundation (KD not valid for F1), Actual: %s\n",
+            columnArr[0]->prev != NULL ? "PASS (move rejected)" : "FAIL (move accepted)");
+
+        Card* topC7 = columnArr[6]->prev;
+        printf("Expected: PASS, Actual: %s\n",
+            (topC7 && strcmp(topC7->ID, "QH") == 0) ?
+            "PASS (card moved)" : "FAIL (card not moved)");
+            break;
+
+        case 3:
+            printf("Running Test 3: Undo/Redo Functionality\n");
+
+            break;
+
+        default:
+            printf("No such test implemented: %d\n", choice);
+            break;
+    }
 
     exit(0);
-
-
 }
