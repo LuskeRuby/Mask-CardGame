@@ -9,29 +9,30 @@ public class SolitaireClient extends JFrame {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-
+    //GUI
     public SolitaireClient() {
         setTitle("Solitaire Client");
         setSize(600, 500);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Create board area (display area)
+        //Create board area
         boardArea = new JTextArea();
         boardArea.setEditable(false);
         boardArea.setFont(new Font("Monospaced", Font.PLAIN, 14)); // Use monospaced font
         JScrollPane scrollPane = new JScrollPane(boardArea);
 
-        // Create command field (input)
+        //Create command field (input)
         commandField = new JTextField(20);
         commandField.addActionListener(e -> sendCommand());
 
-        // Layout
+        //add to Layout
         setLayout(new BorderLayout());
         add(scrollPane, BorderLayout.CENTER);
         add(commandField, BorderLayout.SOUTH);
 
         connectToServer();
     }
+
 
     private void connectToServer() {
         new Thread(() -> {
@@ -55,11 +56,12 @@ public class SolitaireClient extends JFrame {
         new Thread(() -> {
             try {
                 out.print(command); // Send command to server
-                out.flush();        // send immediately
+                out.flush();        // send immediatel
 
                 StringBuilder response = new StringBuilder();
                 String line;
-                while ((line = in.readLine()) != null && !line.equals("END")) {
+                //Note, msg send from C will always have "END" at the end of the string
+                while ((line = in.readLine()) != null && !line.equals("END")) { 
                     response.append(line).append("\n");
                 }
 

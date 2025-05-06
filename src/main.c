@@ -70,7 +70,8 @@ int main() {
         WSACleanup();
         return 1;
     }
-    LD(NULL);
+
+    LD(NULL); //LD null before we send/receive commands
     // Continuously receive and process commands
     while (1) {
         int bytes_received = recv(client_socket, buffer, sizeof(buffer) - 1, 0);
@@ -78,32 +79,34 @@ int main() {
             printf("Error receiving data: %d\n", WSAGetLastError());
             break;
         }
+
         if (bytes_received == 0) {
             printf("Client disconnected\n");
             break;
         }
-
         buffer[bytes_received] = '\0';  // Null-terminate the received string
         printf("Received command: '%s'\n", buffer);  // Print the received command
 
-        // Trim the received command from whitespace (leading and trailing)
+
+        // Trim the received command from whitespace
         char *command = buffer;
         while (*command && (*command == ' ' || *command == '\n' || *command == '\r')) {
             command++;  // Skip leading spaces or newline characters
         }
 
+        //GUI manageing the two phases
         if (currentPhase == STARTUP_PHASE) {
             RunStartupPhase(command);  // run Startup Phase
         } else if (currentPhase == PLAY_PHASE) {
             RunPlayPhase(command);  // run Play Phase
         }
 
-
-        strcat(outputString, "END\n"); //Response must be concated with end
+        //The string we send will end with "END" so client know we are done reading
+        strcat(outputString, "END\n");
         char *response = outputString;
 
         // Send response back to the client after processing each command
-        printf("Sending response: '%s'\n", response);  // Log the response being sent
+        printf("Sending response: '%s'\n", response);  // Print the response being sent
 
         int bytes_sent = send(client_socket, response, strlen(response), 0);
         if (bytes_sent == SOCKET_ERROR) {
