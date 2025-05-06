@@ -12,6 +12,7 @@ public class SolitaireClient extends JFrame {
     private BufferedReader in;
     private JPanel statusPanel;
     String returnString = "";
+    boolean playphase = false;
 
     //Gui setup
     public SolitaireClient() {
@@ -75,6 +76,14 @@ public class SolitaireClient extends JFrame {
         } else { //if command typed in inputfield
         command = commandField.getText().trim();
         returnString = "";
+
+        //We should only be able to click on cards during playphase, so these ensure we are in correct phase.
+        if (command.toLowerCase().equals("p")) {
+            playphase = true;
+        } else if (command.toLowerCase().equals("q")) {
+            playphase = false;
+        }
+
         if (command.isEmpty()) return;
         commandField.setText("");
         }
@@ -191,16 +200,19 @@ public class SolitaireClient extends JFrame {
             //Make the card an object (cardLabel)
             CardLabel cardLabel = new CardLabel(token, new ImageIcon(scaled), colnr);
 
-            //Eventhandling if click on card (cardLabel)
-            cardLabel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    //This Func prepares returnstring, which is a input command of moving cards that is sent back to C program.
-                    updateReturnString(cardLabel.getCardID(), cardLabel.getCol()); 
-                    cardLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 2)); // Mark the card with a border
-                    cardPanel.repaint();
-                }
-            });
+           
+            if (playphase) {
+                 //Eventhandling if click on card (cardLabel)
+                cardLabel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        //This Func prepares returnstring, which is a input command of moving cards that is sent back to C program.
+                        updateReturnString(cardLabel.getCardID(), cardLabel.getCol()); 
+                        cardLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 2)); // Mark the card with a border
+                        cardPanel.repaint();
+                    }
+                });
+            }
             panel.add(cardLabel, gbc); //Add the card to gui
         } catch (Exception e) { //Error handling
             JLabel fallback = new JLabel("[?]");
