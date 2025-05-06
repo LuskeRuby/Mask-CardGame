@@ -15,6 +15,9 @@ typedef struct cards Card;
 extern char dummyValue[3];
 extern Card *list; //initalize list
 
+extern Card* columnArr[7];  // Declaring external reference for columnArr
+extern Card* foundationArr[4];  // Declaring external reference for foundationArr
+
 
 //Card Functions
 Card* CreateCard(char *ID);
