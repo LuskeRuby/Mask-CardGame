@@ -38,7 +38,7 @@ int IsValidMove(Card* moving, Card* target, char fromType, char toType) {
     char mSuit = moving->ID[1];
     char tSuit = target->ID[1];
 
-    // column -> column OR foundation -> column
+    // moving to -> column
     if ((fromType == 'C' || fromType == 'F') && toType == 'C') {
         if (strcmp(target->ID, "00") == 0) {
             return mRank == 13; // Only King can go to empty column
@@ -46,7 +46,7 @@ int IsValidMove(Card* moving, Card* target, char fromType, char toType) {
         return (mRank + 1 == tRank) && (mSuit != tSuit); // One rank lower, different suit
     }
 
-    // Column → Foundation
+    // moving to → Foundation
     if (fromType == 'C' && toType == 'F') {
         if (strcmp(target->ID, "00") == 0) {
             return mRank == 1; // Only Ace can go to empty foundation

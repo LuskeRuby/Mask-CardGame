@@ -81,7 +81,13 @@ void RunPlayPhase(const char* input) {
         }
         Card *target = to->prev;
 
-        if (!IsValidMove(moving, target, 'C', 'C')) {
+        // Prevent non-top cards going to foundation
+        if (command[7] == 'F' && count > 1) {
+            PrintPlayPhase(command, "Invalid move: can only move one top card to foundation.\n");
+            return;
+        }
+
+        if (!IsValidMove(moving, target, 'C',  command[7])) {
             PrintPlayPhase(command, "Invalid move: must be one rank lower and not same suit.\n");
             return;
         }
