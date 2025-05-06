@@ -17,10 +17,10 @@ add_executable(Mask_CardGame
         src/model/StartPhaseCommands.h
         src/model/playPhaseCommands.c
         src/model/playPhaseCommands.h
-        src/view/GUI.c
-        src/view/GUI.h
         src/model/playPhaseValidation.c
         src/model/playPhaseValidation.h
+        src/tests/tests.c
+        src/tests/tests.h
 )
 
 # Link against the Winsock library

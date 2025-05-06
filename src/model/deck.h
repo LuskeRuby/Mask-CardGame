@@ -1,6 +1,6 @@
 #include <stdio.h>
-#ifndef CARD_H
-#define CARD_H
+#ifndef DECK_H
+#define DECK_H
 
 //Struct of cards
 struct cards {
