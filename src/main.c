@@ -26,12 +26,6 @@ int main(void) {
 int main() {
 
     //RunTests();
-    RunStartupPhase("LD");
-    RunStartupPhase("P");
-    RunPlayPhase("C1:AC->F1");
-    RunPlayPhase("C6:Th->C6");
-    RunPlayPhase("C3->C3");
-    exit(0);
 
     WSADATA wsa;
     SOCKET server_socket, client_socket;

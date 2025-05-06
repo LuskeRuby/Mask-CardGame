@@ -83,7 +83,12 @@ void RunTests() {
 
         case 3:
             printf("Running Test 3: Undo/Redo Functionality\n");
-
+        RunStartupPhase("LD");
+        RunStartupPhase("P");
+        RunPlayPhase("C1:AC->F1");
+        RunPlayPhase("C6:Th->C6");
+        RunPlayPhase("C3->C3");
+        exit(0);
             break;
 
         default:
