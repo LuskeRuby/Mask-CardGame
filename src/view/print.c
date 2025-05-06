@@ -1,16 +1,12 @@
-//
-// Created by rubym on 22/04/2025.
-//
-
 #include "print.h"
 #include "model/deck.h"
 #include <stdio.h>
 #include <string.h>
 #include <controller/playPhase.h>
-
 #include "model/playPhaseCommands.h"
 
-int PrintStartupPhase(char lastCommand[3], char* msg) {
+
+void PrintStartupPhase(char lastCommand[3], char* msg) {
     Card* current = list->next;  // skip dummy node
     int columnCounter = 0;
     int foundationCounter = 1;
@@ -54,7 +50,6 @@ int PrintStartupPhase(char lastCommand[3], char* msg) {
     strcat(outputString, "\n");
 
     printf("%s", outputString); // Print the string
-    return 0;
 }
 
 void PrintPlayPhase(char lastCommand[3], char* msg) {
@@ -126,5 +121,4 @@ void PrintPlayPhase(char lastCommand[3], char* msg) {
 
     //PRINT STRING
     printf("%s", outputString); // Print string
-    return 0;
 }
