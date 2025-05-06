@@ -4,7 +4,7 @@
 
 #ifndef PLAYPHASEVALIDATION_H
 #define PLAYPHASEVALIDATION_H
-#include "deck.h"
+#include "model/deck.h"
 
 int IsCardInSourceColumn(Card* fromArr, const char* cardID, int* countToCard); // ensured card is in the column and count to its position
 int IsValidMove(Card* moving, Card* target, char fromType, char toType);

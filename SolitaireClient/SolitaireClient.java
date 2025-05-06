@@ -10,6 +10,8 @@ public class SolitaireClient extends JFrame {
     private PrintWriter out;
     private BufferedReader in;
 
+
+    //Gui setup
     public SolitaireClient() {
         setTitle("Solitaire Client");
         setSize(1000, 700);
@@ -17,7 +19,7 @@ public class SolitaireClient extends JFrame {
 
         // Card panel setup
         cardPanel = new JPanel(new GridBagLayout());
-        cardPanel.setBackground(new Color(0, 100, 0)); // Dark green felt
+        cardPanel.setBackground(new Color(0, 76, 153));
         JScrollPane scrollPane = new JScrollPane(cardPanel);
 
         // Command field
@@ -98,9 +100,9 @@ public class SolitaireClient extends JFrame {
                     gbc.gridy = row;
     
                     if (token.equals("[]")) {
-                        addCardImage(cardPanel, "Cards/EMPTY.PNG", gbc);  // Assuming it's back.png
+                        addCardImage(cardPanel, "Cards/EMPTY.png", gbc);
                     } else if (token.matches("[2-9TJQKA][CDHS]")) {
-                        String imagePath = "Cards/" + token + ".PNG";
+                        String imagePath = "Cards/" + token + ".png";
                         addCardImage(cardPanel, imagePath, gbc);
                     } else if (!token.isEmpty()) {
                         JLabel label = new JLabel(token);

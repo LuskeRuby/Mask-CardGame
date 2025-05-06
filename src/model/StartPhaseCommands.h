@@ -5,6 +5,8 @@
 #include "deck.h"
 #ifndef STARTPHASECOMMANDS_H
 #define STARTPHASECOMMANDS_H
+#include "model/deck.h"
+
 
 Card* BuildLinkedListFromFile(FILE* stream);
 Card* LoadDefaultDeck();

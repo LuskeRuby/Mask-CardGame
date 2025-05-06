@@ -12,6 +12,7 @@
 #include "model/playPhaseCommands.h"
 #include "model/playPhaseValidation.h"
 #include "model/StartPhaseCommands.h"
+#include "tests/tests.h"
 
 void RunTests() {
     int choice;

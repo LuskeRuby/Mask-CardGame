@@ -1,7 +1,7 @@
 //
 // Created by rasmu on 24-04-2025.
 //
-#include "deck.h"
+#include "MODEL/deck.h"
 #include "playPhaseCommands.h"
 
 #include <string.h>

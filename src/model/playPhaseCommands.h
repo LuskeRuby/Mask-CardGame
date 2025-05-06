@@ -1,7 +1,9 @@
 
 #ifndef PLAYPHASECOMMANDS_H
+#include "model/deck.h"
 #define PLAYPHASECOMMANDS_H
 #include "model/deck.h"
+
 
 //Global arrays
 extern Card* columnArr[7];

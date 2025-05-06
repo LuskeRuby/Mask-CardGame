@@ -3,6 +3,7 @@
 //
 
 #ifndef PLAY_H
+#include "view/print.h"
 #define PLAY_H
 #define PRINT_H
 //Global var
