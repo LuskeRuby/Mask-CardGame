@@ -57,6 +57,13 @@ void RunPlayPhase(const char* input) {
 
         ExtractColumnsFromInput(command, &from, &to, 1);
 
+        // Cannot move to and from the same coloumn
+        if (command[0] == command[7] && command[1] == command[8]) {
+            PrintPlayPhase(command, "Invalid move: cannot move cards within the same column.\n");
+            return;
+        }
+
+
         // Check if the source card is facedown before allowing the move
         if (from->prev->faceUp == 0) {
             PrintPlayPhase(command, "Invalid move: card is facedown and cannot be moved.\n");
