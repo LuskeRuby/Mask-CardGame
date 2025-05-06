@@ -87,7 +87,7 @@ void RunPlayPhase(const char* input) {
             return;
         }
 
-        if (!IsValidMove(moving, target, 'C',  command[7])) {
+        if (!IsValidMove(moving, target, command[0],  command[7])) {
             PrintPlayPhase(command, "Invalid move: must be one rank lower and not same suit.\n");
             return;
         }
