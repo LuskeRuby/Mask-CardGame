@@ -50,12 +50,6 @@ void RunPlayPhase(const char* input) {
     // Handle multi-card column-to-column move: e.g., "C1:4H->C3"
     if (command[2] == ':') {
 
-        // Illegal to move multiple cards between foundations
-        if (command[0] == 'F' || command[7] == 'F') {
-            PrintPlayPhase(command, "Invalid: can only move top card to/from foundation.\n");
-            return;
-        }
-
         // Extract the card to move
         char moveCardID[3] = { command[3], command[4], '\0' };
         Card* from; Card* to; // Declarations for later use
