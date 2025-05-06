@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 
@@ -9,9 +10,10 @@ public class SolitaireClient extends JFrame {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
+    private JPanel statusPanel;
+    String returnString = "";
 
-
-    //Gui setup
+    // Gui setup
     public SolitaireClient() {
         setTitle("Solitaire Client");
         setSize(1000, 700);
@@ -26,10 +28,22 @@ public class SolitaireClient extends JFrame {
         commandField = new JTextField(20);
         commandField.addActionListener(e -> sendCommand());
 
+        // Statuspanel (Last command and message)
+        statusPanel = new JPanel();
+        statusPanel.setBackground(new Color(0, 76, 153));
+        statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
+
+        // Box for both command field and status panel
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BorderLayout());
+        bottomPanel.setBackground(new Color(0, 76, 153));
+        bottomPanel.add(statusPanel, BorderLayout.CENTER);
+        bottomPanel.add(commandField, BorderLayout.SOUTH);
+
         // Layout
         setLayout(new BorderLayout());
         add(scrollPane, BorderLayout.CENTER);
-        add(commandField, BorderLayout.SOUTH);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         connectToServer();
     }
@@ -48,9 +62,16 @@ public class SolitaireClient extends JFrame {
     }
 
     private void sendCommand() {
-        String command = commandField.getText().trim();
+        String command;
+        if (returnString.length() >= 8) { //If two card is clicked
+            command = returnString;
+            returnString = "";
+        } else { //if typed
+        command = commandField.getText().trim();
+        returnString = "";
         if (command.isEmpty()) return;
         commandField.setText("");
+        }
 
         new Thread(() -> {
             try {
@@ -80,30 +101,64 @@ public class SolitaireClient extends JFrame {
         cardPanel.repaint();
     }
 
+    void updateReturnString(String cardID, String col) {
+        if (returnString.equals("")) { //This means the first card that is clicked on 
+            returnString += col + ":" + cardID + "->";
+        } else { //not empty, second card that is clicked on, so we must now also return this msg.
+            returnString += col;
+            sendCommand();
+        }
+
+    }
+
+
     private void displayBoard(String boardData) {
         SwingUtilities.invokeLater(() -> {
             cardPanel.removeAll();
+            statusPanel.removeAll();
+            // Remove newlines from input
             String[] lines = boardData.split("\n");
-    
+
             GridBagConstraints gbc = new GridBagConstraints();
-            gbc.insets = new Insets(2, 2, 2, 2);
-    
+            gbc.insets = new Insets(0, 2, 2, 2);
+
+            // Get LastCommand and msg and put in statusPanel
+            String lastCommand = lines[lines.length - 2];
+            String message = lines[lines.length - 1];
+            JLabel lastCommandLabel = new JLabel(lastCommand);
+            lastCommandLabel.setForeground(Color.WHITE);
+            statusPanel.add(lastCommandLabel);
+            JLabel messageLabel = new JLabel(message);
+            messageLabel.setForeground(Color.WHITE);
+            statusPanel.add(messageLabel);
+            statusPanel.revalidate();
+            statusPanel.repaint();
+
+            // CardPanel
             int row = 0;
-            for (String line : lines) {
-                if (line.trim().isEmpty()) continue;
-    
-                String[] tokens = line.split("\t");
-    
+            for (int i = 0; i < lines.length - 2; i++) {
+                if (lines[i].trim().isEmpty()) continue; // If empty
+                String[] tokens = lines[i].split("\t"); // Split at every tab
+
                 for (int col = 0; col < tokens.length; col++) {
                     String token = tokens[col].trim();
+
                     gbc.gridx = col;
                     gbc.gridy = row;
-    
-                    if (token.equals("[]")) {
-                        addCardImage(cardPanel, "Cards/EMPTY.png", gbc);
-                    } else if (token.matches("[2-9TJQKA][CDHS]")) {
+
+                    // if foundation
+                    if (col == 7) {
+                        cardPanel.add(Box.createRigidArea(new Dimension(40, 0)), gbc); // Add space between column7 and foundation
+                    }
+
+                    if (token.equals("[]")) { //Facedown
+                        addCardImage(cardPanel, "Cards/EMPTY.png", gbc, token,col);
+
+                    } else if (token.matches("[2-9TJQKA][CDHS]")) { // Any other card (use regular expression)
                         String imagePath = "Cards/" + token + ".png";
-                        addCardImage(cardPanel, imagePath, gbc);
+                        
+                        addCardImage(cardPanel, imagePath, gbc, token, col);
+
                     } else if (!token.isEmpty()) {
                         JLabel label = new JLabel(token);
                         label.setForeground(Color.WHITE);
@@ -111,28 +166,69 @@ public class SolitaireClient extends JFrame {
                         cardPanel.add(label, gbc);
                     }
                 }
-    
+
                 row++;
             }
-    
+
             cardPanel.revalidate();
             cardPanel.repaint();
         });
     }
 
-    private void addCardImage(JPanel panel, String imagePath, GridBagConstraints gbc) {
+
+
+
+
+    private void addCardImage(JPanel panel, String imagePath, GridBagConstraints gbc, String token, int colnr) {
         try {
-            ImageIcon icon = new ImageIcon(imagePath); // Load from file path
+            ImageIcon icon = new ImageIcon(imagePath); // ImageIcon used to load img from file path
             if (icon.getIconWidth() == -1) throw new IOException("Image not found");
-    
-            Image scaled = icon.getImage().getScaledInstance(50, 80, Image.SCALE_SMOOTH);
-            JLabel cardLabel = new JLabel(new ImageIcon(scaled));
+
+            Image scaled = icon.getImage().getScaledInstance(60, 70, Image.SCALE_SMOOTH);
+
+
+            //Make card object (cardLabel)
+            CardLabel cardLabel = new CardLabel(token, new ImageIcon(scaled), colnr);
+            //Eventhandling if click on card (cardLabel)
+            cardLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    updateReturnString(cardLabel.getCardID(), cardLabel.getCol()); //This Func prepares the string sent back to C program.
+                    cardLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 2)); // Mark the card with a border
+                    cardPanel.repaint();
+                }
+            });
             panel.add(cardLabel, gbc);
         } catch (Exception e) {
             JLabel fallback = new JLabel("[?]");
             fallback.setForeground(Color.RED);
             panel.add(fallback, gbc);
         }
+    }
+
+    private static class CardLabel extends JLabel {
+        private final String cardID;
+        private String col;
+
+        public CardLabel(String token, Icon icon, int colnr) {
+            super(icon);
+            if (colnr < 7) { //Column
+                col = "C" + (colnr+1);
+            } else if (colnr >= 8 ) { //foundations (Workaround to iniate Foundationnr since we dont bother bringing rows into this class)
+                col = "F" + (colnr-7);
+            }
+
+            this.cardID = token;
+        }
+
+        public String getCardID() {
+            return cardID;
+        }
+
+        public String getCol() {
+            return col;
+        }
+
     }
 
     public static void main(String[] args) {
