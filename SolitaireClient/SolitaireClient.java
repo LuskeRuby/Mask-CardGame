@@ -123,7 +123,7 @@ public class SolitaireClient extends JFrame {
             //Clear status and current shown cards
             cardPanel.removeAll();
             statusPanel.removeAll();
-            
+            int FC = 7;
             //Remove newlines from input 
             String[] lines = boardData.split("\n");
 
@@ -167,8 +167,9 @@ public class SolitaireClient extends JFrame {
                     //If facedowncard or foundation
                     if (token.equals("[]")) { 
                         //Foundation
-                        if (col > 7) { 
-                            addCardImage(cardPanel, "Cards/noCard.png", gbc, token,col); //Link cardid to empty image card
+                        if (col == 8) { 
+                            FC++;
+                            addCardImage(cardPanel, "Cards/noCard.png", gbc, token, FC); //Link cardid to empty image card, since foundation we give foundationCounter as column
                         } else { //Facedowncard
                             addCardImage(cardPanel, "Cards/EMPTY.png", gbc, token,col); //Link cardid to empty image card
                         }
