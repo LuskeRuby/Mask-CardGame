@@ -1,12 +1,9 @@
 
 #include "StartPhaseCommands.h"
-
-#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
-#include <controller/playPhase.h>
 #include "deck.h"
 
 

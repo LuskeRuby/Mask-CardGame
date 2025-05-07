@@ -1,7 +1,5 @@
 #include "playPhaseValidation.h"
-
 #include <string.h>
-
 #include "deck.h"
 
 int ConvertRank(Card* card) {

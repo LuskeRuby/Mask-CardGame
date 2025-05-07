@@ -1,15 +1,11 @@
 #include "startupPhase.h"
-
 #include <ctype.h>
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
 #include "playPhase.h"
 #include "model/playPhaseCommands.h"
 #include "model/StartPhaseCommands.h"
-#include "model/deck.h"
 
 Phase currentPhase = STARTUP_PHASE;  // Init
 
@@ -28,7 +24,7 @@ void RunStartupPhase(const char* input) {
     if (strcmp(command, "LD") == 0) {
         char* result = LD(NULL);
         if (strcmp(result, "OK") == 0) {
-            PrintStartupPhase("LD", "Default deck loaded.\n");
+            PrintStartupPhase("LD", "OK\n");
         } else {
             PrintStartupPhase("LD", "Error loading default deck.\n");
         }
@@ -40,8 +36,7 @@ void RunStartupPhase(const char* input) {
 
         char* result = LD(filename);
         if (strcmp(result, "OK") == 0) {
-            sprintf(msgPrint, "Deck '%s' loaded.\n", filename); //make string msg
-            PrintStartupPhase("LD", msgPrint);
+            PrintStartupPhase("LD", 'OK \n');
         } else {
             sprintf(msgPrint, "Error loading deck '%s'.\n", filename);
             PrintStartupPhase("LD", msgPrint);
@@ -51,7 +46,7 @@ void RunStartupPhase(const char* input) {
 
     } else if (strcmp(command, "SW") == 0) {
         SW();
-        PrintStartupPhase("SW", "Deck shuffled.\n");
+        PrintStartupPhase("SW", "OK.\n");
 
     } else if (strcmp(command, "SI") == 0) {
         SI(0);

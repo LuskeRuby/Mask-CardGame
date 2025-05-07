@@ -1,7 +1,6 @@
 #include "playPhase.h"
 
 #include <ctype.h>
-#include <stdio.h>
 #include <string.h>
 #include <model/deck.h>
 #include <view/print.h>
@@ -9,7 +8,6 @@
 #include "startupPhase.h"
 #include "model/playPhaseCommands.h"
 #include "model/playPhaseValidation.h"
-#include "view/print.h"
 
 
 
