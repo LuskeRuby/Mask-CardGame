@@ -31,7 +31,7 @@ public class SolitaireClient extends JFrame {
         commandField = new JTextField(20);
         commandField.addActionListener(e -> sendCommand());
 
-        // Show (Last command and message) in GUI
+        //Show (Last command and message) in GUI
         statusPanel = new JPanel();
         statusPanel.setBackground(new Color(0, 76, 153));
         statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.Y_AXIS));
@@ -178,7 +178,12 @@ public class SolitaireClient extends JFrame {
                     //Any other card (use regular expression)
                     } else if (token.matches("[2-9TJQKA][CDHS]")) { 
                         String imagePath = "Cards/" + token + ".png";
+                        if (col == 8) {
+                            addCardImage(cardPanel, imagePath, gbc, token, fc);
+                        }
+
                         addCardImage(cardPanel, imagePath, gbc, token, col); //Link cardid to empty image card, and give mouseclick eventhandler
+                        
 
                         //to print Columnnumbers and foundationnumbers like "c1", "f1"...
                     } else if (!token.isEmpty()) {

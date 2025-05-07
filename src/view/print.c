@@ -54,7 +54,7 @@ void PrintStartupPhase(char lastCommand[3], char* msg) {
 void PrintPlayPhase(char lastCommand[3], char* msg) {
     int fullyPrintedColumns = 0;
     int foundationCounter = 1;
-
+    int fullyPrintedFoundations = 0;
     // temp pointers to not change original columnArr
     Card* tempColumnArr[7];
     for (int i = 0; i < 7; i++) {
@@ -67,8 +67,8 @@ void PrintPlayPhase(char lastCommand[3], char* msg) {
     //add columnnames to the output string
     strcat(outputString, "C1\tC2\tC3\tC4\tC5\tC6\tC7\n\n");
 
-    //Row printer, continues until all 7 columns are done printing
-    while (fullyPrintedColumns < 7) {
+    //Row printer, continues until all 7 columns & foundations are done printing
+    while (fullyPrintedColumns < 7 || foundationCounter < 5) {
         fullyPrintedColumns = 0;
         for (int col = 0; col < 7; col++) { // iterate columns
 
