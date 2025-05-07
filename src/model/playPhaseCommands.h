@@ -16,7 +16,7 @@ extern int currentMove;              // Index for undo/redo position
 void InitArray(); //Populate the array of linkedlists
 void ExtractColumnsFromInput(char *input, Card** fromArr, Card** toArr, char HasCardID); //Extract data from input and save as variables
 
-void LogNewMove(const char* move,  const char* flipped);
+void LogNewMove(const char* move,  int flipped);
 void UndoMove();
 void RedoMove();
 

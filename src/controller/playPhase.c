@@ -13,7 +13,7 @@
 
 char outputString[500]; // Initialize String sent to GUI
 // Global LOG
-char moveLog[MAX_MOVES][32];; // store up to 500 move commands, each max 32 chars
+char moveLog[MAX_MOVES][15];; // store up to 500 move commands, each max 32 chars
 int moveCount = 0;           // Number of moves logged
 int currentMove = 0;         // Index of the next move to redo (like a cursor)
 
