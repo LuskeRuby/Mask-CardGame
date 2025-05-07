@@ -123,7 +123,7 @@ public class SolitaireClient extends JFrame {
             //Clear status and current shown cards
             cardPanel.removeAll();
             statusPanel.removeAll();
-            int FC = 7;
+            int FC = 8;
             //Remove newlines from input 
             String[] lines = boardData.split("\n");
 
