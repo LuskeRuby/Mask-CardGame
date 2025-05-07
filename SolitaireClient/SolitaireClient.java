@@ -120,7 +120,7 @@ public class SolitaireClient extends JFrame {
     //GUI display to show cards
     private void displayBoard(String boardData) {
         SwingUtilities.invokeLater(() -> {
-            int fc = 7;
+            int fc = 7; //FoundationCounter, used to print display the foundation
             //Clear status and current shown cards
             cardPanel.removeAll();
             statusPanel.removeAll();
@@ -168,6 +168,7 @@ public class SolitaireClient extends JFrame {
                     if (token.equals("[]")) { 
                         //Foundation
                         if (col == 8) { 
+                            //We send to foundationcounter column over to properly make the card "F1,F2,F3,F4"
                             addCardImage(cardPanel, "Cards/noCard.png", gbc, token, fc); //Link cardid to empty image card, since foundation we give foundationCounter as column
                         } else { //Facedowncard
                             addCardImage(cardPanel, "Cards/EMPTY.png", gbc, token,col); //Link cardid to empty image card
@@ -185,7 +186,7 @@ public class SolitaireClient extends JFrame {
                         cardPanel.add(label, gbc);
                     }
                 }
-                row++;
+                row++; //New row update FC
                 fc++;
             }
             cardPanel.revalidate();
