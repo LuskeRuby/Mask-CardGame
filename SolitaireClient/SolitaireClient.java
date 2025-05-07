@@ -24,7 +24,9 @@ public class SolitaireClient extends JFrame {
         cardPanel = new JPanel(new GridBagLayout());
         cardPanel.setBackground(new Color(0, 76, 153));
         JScrollPane scrollPane = new JScrollPane(cardPanel);
-
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        scrollPane.getVerticalScrollBar().setBlockIncrement(100);
+        
         //Inputcommand field in GUI
         commandField = new JTextField(20);
         commandField.addActionListener(e -> sendCommand());
@@ -202,7 +204,7 @@ public class SolitaireClient extends JFrame {
         try {
             ImageIcon icon = new ImageIcon(imagePath); // ImageIcon used to load img from file path
             if (icon.getIconWidth() == -1) throw new IOException("Image not found");
-            Image scaled = icon.getImage().getScaledInstance(60, 70, Image.SCALE_SMOOTH);
+            Image scaled = icon.getImage().getScaledInstance(70, 80, Image.SCALE_SMOOTH);
 
             //Make the card an object (cardLabel)
             CardLabel cardLabel = new CardLabel(token, new ImageIcon(scaled), colnr);
