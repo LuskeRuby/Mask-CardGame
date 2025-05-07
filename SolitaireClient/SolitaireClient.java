@@ -120,10 +120,10 @@ public class SolitaireClient extends JFrame {
     //GUI display to show cards
     private void displayBoard(String boardData) {
         SwingUtilities.invokeLater(() -> {
+            int fc = 7;
             //Clear status and current shown cards
             cardPanel.removeAll();
             statusPanel.removeAll();
-            int FC = 8;
             //Remove newlines from input 
             String[] lines = boardData.split("\n");
 
@@ -145,8 +145,8 @@ public class SolitaireClient extends JFrame {
             // Print cards in gui (CardPanel)
             int row = 0;
             for (int i = 0; i < lines.length - 2; i++) {
-                if (lines[i].trim().isEmpty()) continue; 
-
+                if (lines[i].trim().isEmpty()) {continue; } 
+                
                 String[] tokens = lines[i].split("\t"); // Split at every tab
 
                 //Iterate all elements (cards, columnnumbers, foundationnumbers)
@@ -168,8 +168,7 @@ public class SolitaireClient extends JFrame {
                     if (token.equals("[]")) { 
                         //Foundation
                         if (col == 8) { 
-                            FC++;
-                            addCardImage(cardPanel, "Cards/noCard.png", gbc, token, FC); //Link cardid to empty image card, since foundation we give foundationCounter as column
+                            addCardImage(cardPanel, "Cards/noCard.png", gbc, token, fc); //Link cardid to empty image card, since foundation we give foundationCounter as column
                         } else { //Facedowncard
                             addCardImage(cardPanel, "Cards/EMPTY.png", gbc, token,col); //Link cardid to empty image card
                         }
@@ -187,6 +186,7 @@ public class SolitaireClient extends JFrame {
                     }
                 }
                 row++;
+                fc++;
             }
             cardPanel.revalidate();
             cardPanel.repaint();
@@ -240,7 +240,7 @@ public class SolitaireClient extends JFrame {
             if (colnr < 7) { //Column
                 col = "C" + (colnr+1);
             } else if (colnr >= 8 ) { //foundations (Workaround to iniate Foundationnr since we dont bother bringing rows into this class)
-                col = "F" + (colnr-7);
+                col = "F" + (colnr-7); 
             }
             this.cardID = token;
         }
