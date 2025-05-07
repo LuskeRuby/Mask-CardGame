@@ -14,6 +14,10 @@
 
 
 char outputString[500]; // Initialize String sent to GUI
+// Global LOG
+char moveLog[MAX_MOVES][32];; // store up to 500 move commands, each max 32 chars
+int moveCount = 0;           // Number of moves logged
+int currentMove = 0;         // Index of the next move to redo (like a cursor)
 
 
 void RunPlayPhase(const char* input) {
@@ -40,11 +44,15 @@ void RunPlayPhase(const char* input) {
     // Undo previous move
     if (strcmp(command, "U") == 0) {
         UndoMove();
+        PrintPlayPhase("U","Undid last move.\n");
+        return;
     }
 
     // Redo previous move
     if (strcmp(command, "R") == 0) {
         RedoMove();
+        PrintPlayPhase("R","Redid last move.\n");
+        return;
     }
 
     // Handle multi-card column-to-column move: e.g., "C1:4H->C3"
@@ -57,7 +65,7 @@ void RunPlayPhase(const char* input) {
 
         ExtractColumnsFromInput(command, &from, &to, 1);
 
-        // Cannot move to and from the same coloumn
+        // Cannot move to and from the same coloum
         if (command[0] == command[7] && command[1] == command[8]) {
             PrintPlayPhase(command, "Invalid move: cannot move cards within the same column.\n");
             return;
@@ -70,7 +78,7 @@ void RunPlayPhase(const char* input) {
             return;
         }
 
-        // ensures card is in the column and return the position
+        // ensures card is in the column and return the count
         if (!IsCardInSourceColumn(from, moveCardID, &count)) {
             PrintPlayPhase(command, "Card not found in source column.\n");
             return;
@@ -98,10 +106,12 @@ void RunPlayPhase(const char* input) {
 
         // If the top card is now face-down, flip it and save it in my LogMove
         if (from->prev->faceUp == 0 && strcmp(from->prev->ID, "00") != 0) {
+            // The card was face-down and is now flipped face-up
             from->prev->faceUp = 1;
-            LogNewMove(command, "1");
+            LogNewMove(command, 1);  // Log the flip as a '1'
         } else {
-            LogNewMove(command,0);
+            // The card is either face-up already or it's a dummy card
+            LogNewMove(command, 0);  // Log no flip as '0'
         }
 
         PrintPlayPhase(command, "ok");
@@ -147,9 +157,9 @@ void RunPlayPhase(const char* input) {
         // If the top card is now face-down, flip it and save it in my LogMove
         if (from->prev->faceUp == 0 && strcmp(from->prev->ID, "00") != 0) {
             from->prev->faceUp = 1;
-            LogNewMove(command, "1");
+            LogNewMove(command, 1);
         } else {
-            LogNewMove(command,"0");
+            LogNewMove(command,0);
         }
 
         PrintPlayPhase(command, "ok");

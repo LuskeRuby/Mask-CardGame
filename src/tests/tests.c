@@ -85,10 +85,23 @@ void RunTests() {
             printf("Running Test 3: Undo/Redo Functionality\n");
         RunStartupPhase("LD");
         RunStartupPhase("P");
-        RunPlayPhase("C1:AC->F1");
-        RunPlayPhase("C6:Th->C6");
-        RunPlayPhase("C3->C3");
-        exit(0);
+        RunPlayPhase("C3:7H->C5");
+        RunPlayPhase("C6->C5");
+        RunPlayPhase("U");
+        RunPlayPhase("R");
+        RunPlayPhase("C2:8C->C6");
+        printf("%s\n", moveLog[0]);
+        printf("%s\n", moveLog[1]); // tjek det er overwritet til 0C6->C5"
+        printf("%s\n", moveLog[2]);  // 1C2:8C->C6 skal stadig stå
+
+        // checks for log entries
+        printf("MoveLog[0]: Expected: 0C3:7H->C5, Actual: %s\n", moveLog[0]);
+        printf("MoveLog[1]: Expected: 0C6->C5, Actual: %s\n", moveLog[1]);
+        printf("MoveLog[2]: Expected: 1C2:8C->C6, Actual: %s\n", moveLog[2]);
+
+        // Check that top card in C6 is now 8C (after redo)
+        Card* topC6 = columnArr[5]->prev;
+        printf("Top card in C6 ID: Expected: 6H, Actual: %s\n", topC6->ID);
             break;
 
         default:

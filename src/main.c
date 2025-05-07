@@ -25,7 +25,7 @@ int main(void) {
 
 int main() {
 
-    //RunTests();
+    RunTests();
 
     WSADATA wsa;
     SOCKET server_socket, client_socket;

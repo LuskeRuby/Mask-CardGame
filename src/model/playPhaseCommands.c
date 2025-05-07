@@ -7,16 +7,12 @@
 #include <string.h>
 #include <controller/playPhase.h>
 
+#include "playPhaseValidation.h"
 #include "StartPhaseCommands.h"
 
 //Global arrays
 Card* columnArr[7];
 Card* foundationArr[4];
-
-// Global LOG
-char moveLog[MAX_MOVES][15]; // store up to 500 move commands, each max 15 chars like "C1:3H->C3"
-int moveCount = 0;           // Number of moves logged
-int currentMove = 0;         // Index of the next move to redo (like a cursor)
 
 
 void InitArray() {
@@ -89,77 +85,120 @@ void ExtractColumnsFromInput(char *input, Card** fromArr, Card** toArr, char Has
     }
 }
 
-void LogNewMove(const char* move,  const char* flipped) {
+void LogNewMove(const char* move, int flipped) {
+    char entry[32] = "";
 
-    char entry[12] = "";  // ensure it's empty
+    entry[0] = flipped ? '1' : '0';
+    strncpy(entry + 1, move, sizeof(entry) - 2);
+    entry[sizeof(entry) - 1] = '\0';
 
-    // append '1' if flipped card
-    if (flipped) {
-        strcat(entry, "1");
-    }
-
-    // insures against crashes if log size is eceeded
     if (moveCount < MAX_MOVES) {
-        strncpy(moveLog[moveCount], move, sizeof(moveLog[moveCount]) - 1);
-        moveLog[moveCount][sizeof(moveLog[moveCount]) - 1] = '\0';
+        strncpy(moveLog[moveCount], entry, sizeof(moveLog[moveCount]) - 1);
+        moveLog[moveCount][sizeof(moveLog[moveCount]) - 1] = '\0';  //log it
 
         moveCount++;
-        currentMove = moveCount;  // Clear redo history after this
+        currentMove = moveCount;
     }
 }
 
+
 void UndoMove() {
-    if (currentMove == 0) {
+    if (currentMove <= 0) {
         printf("Nothing to undo.\n");
         return;
     }
 
-    char* lastMove = moveLog[--currentMove];  // Move the cursor back to the previous move
-    char reversedMove[20];
+    // Step 1: Get the move entry and save the flip status
+    char* fullEntry = moveLog[--currentMove];
+    int flipped = fullEntry[0] == '1';
 
-    // Reverse the move
-    if (lastMove[2] == ':') {
-        // Format: C3:QH->C7 → invert to C7:QH->C3
-        snprintf(reversedMove, sizeof(reversedMove), "%c%c:%c%c->%c%c",
-            lastMove[7], lastMove[8],  // dest
-            lastMove[3], lastMove[4],  // card ID
-            lastMove[0], lastMove[1]   // src
-        );
-    } else if (lastMove[2] == '-' && lastMove[3] == '>') {
-        // Format: C1->C7 → invert to C7->C1
-        snprintf(reversedMove, sizeof(reversedMove), "%c%c->%c%c",
-            lastMove[4], lastMove[5],  // dest
-            lastMove[0], lastMove[1]   // src
-        );
-    } else {
-        printf("Cannot undo unknown move format: %s\n", lastMove);
-        return;
-    }
+    // Step 2: Remove the first character (flip flag)
+    char cleanedMove[31];
+    strncpy(cleanedMove, fullEntry + 1, sizeof(cleanedMove) - 1);
+    cleanedMove[sizeof(cleanedMove) - 1] = '\0';
 
-    // Check if we need to flip the top card back
-    if (lastMove[9] == '1') {
-        Card* from = NULL;
-        Card* to = NULL;
+    // Step 3: Extract from the original move and reverse on that if i need to flip.
+    Card* from = NULL;
+    Card* to = NULL;
 
-        // Use the original move (not reversed!) to extract the original 'from'
-        ExtractColumnsFromInput(lastMove, &from, &to, 1);
-
-        //flip the top card back
+    if (flipped) {
+        ExtractColumnsFromInput(cleanedMove, &from, &to, (cleanedMove[2] == ':') ? 1 : 0);
         from->prev->faceUp = 0;
     }
 
-    // Reapply the reversed move
-    RunPlayPhase(reversedMove);
-}
+    // Step 4: Parse and reverse the move
+    char reversedMove[20] = "";
+    if (cleanedMove[2] == ':') {
+        // Format: C3:QH->C7 → invert to C7:QH->C3
+        snprintf(reversedMove, sizeof(reversedMove), "%c%c:%c%c->%c%c",
+            cleanedMove[7], cleanedMove[8],  // dest
+            cleanedMove[3], cleanedMove[4],  // card ID
+            cleanedMove[0], cleanedMove[1]   // src
+        );
+    } else if (cleanedMove[2] == '-') {
+        // Format: C1->C7 → invert to C7->C1
+        snprintf(reversedMove, sizeof(reversedMove), "%c%c->%c%c",
+            cleanedMove[4], cleanedMove[5],  // dest
+            cleanedMove[0], cleanedMove[1]   // src
+        );
+    } else {
+        printf("Cannot undo unknown move format: %s\n", cleanedMove);
+        return;
+    }
 
+    // Step 5: Extract source/destination columns from reversed move
+    ExtractColumnsFromInput(reversedMove, &from, &to, (reversedMove[2] == ':') ? 1 : 0);
+
+    // Step 6: Determine how many cards to move
+    char moveCardID[3] = "";
+    int count = 0;
+    if (reversedMove[2] == ':') {
+        strncpy(moveCardID, &reversedMove[3], 2);
+        moveCardID[2] = '\0';
+        IsCardInSourceColumn(from, moveCardID, &count);
+    } else {
+        count = 1;
+    }
+
+    // Step 7: Execute the move
+    MoveTopCards(&from, &to, count);
+}
 
 
 // Function to redo the last undone move
 void RedoMove() {
-    if (currentMove < moveCount) {
-        printf("Redo: %s\n", moveLog[currentMove]);
-        currentMove++;  // Move forward to the next move
-    } else {
+    if (currentMove == moveCount) {
         printf("Nothing to redo.\n");
+        return;
+    }
+
+    char* fullEntry = moveLog[currentMove++];
+    int flipped = fullEntry[0] == '1';
+
+    //remove the 1 or 0 at the start
+    char move[31];
+    strncpy(move, fullEntry + 1, sizeof(move) - 1);
+    move[sizeof(move) - 1] = '\0';
+
+
+    Card* from = NULL;
+    Card* to = NULL;
+    ExtractColumnsFromInput(move, &from, &to, (move[2] == ':') ? 1 : 0);
+
+    int count = 0;
+    if (move[2] == ':') {
+        char cardID[3] = { move[3], move[4], '\0' };
+        IsCardInSourceColumn(from, cardID, &count);
+    } else {
+        count = 1;
+    }
+
+    MoveTopCards(&from, &to, count);
+
+    if (flipped != 0) {
+        from->prev->faceUp = 1;
     }
 }
+
+
+
