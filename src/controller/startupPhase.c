@@ -1,15 +1,11 @@
 #include "startupPhase.h"
-
 #include <ctype.h>
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
 #include "playPhase.h"
 #include "model/playPhaseCommands.h"
 #include "model/StartPhaseCommands.h"
-#include "model/deck.h"
 
 Phase currentPhase = STARTUP_PHASE;  // Init
 

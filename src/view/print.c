@@ -3,9 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <controller/playPhase.h>
-#include "model/playPhaseCommands.h"
 
-
+//Prints the terminalwindow for startupPhase
 void PrintStartupPhase(char lastCommand[3], char* msg) {
     Card* current = list->next;  // skip dummy node
     int columnCounter = 0;
@@ -51,7 +50,7 @@ void PrintStartupPhase(char lastCommand[3], char* msg) {
 
     printf("%s", outputString); // Print the string
 }
-
+//Prints the terminalwindow for PlayPhase
 void PrintPlayPhase(char lastCommand[3], char* msg) {
     int fullyPrintedColumns = 0;
     int foundationCounter = 1;

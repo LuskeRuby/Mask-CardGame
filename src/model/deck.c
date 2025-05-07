@@ -1,11 +1,7 @@
 #include <string.h>
-#include <stdio.h>
 #include "model/deck.h"
-
 #include <stdlib.h>
 
-#include "view/PRINT.H"
-#include "model/playPhaseCommands.h"
 
 
 //Global variable
@@ -13,23 +9,23 @@ char dummyValue[3] = "00";
 Card* dummy = NULL; //Dummyvalue globalvariable from card.h
 Card *list = NULL; //initalize list
 
-//Functions
+
 //Create singular CARD:
     Card* CreateCard(char *ID) {
-        // allocate a new node
+        //allocate memory
         Card *newCard = (Card *) malloc(sizeof(Card));
-        // initialize node data
+        //initialize CardID
         strcpy(newCard->ID, ID);
         newCard->faceUp = 0;
-        // initialize pointer
+        //initialize pointer
         newCard->next = newCard;
         newCard->prev = newCard;
         return newCard;
     }
 
-//Add card to deck (Linkedlist)
+//Add card parameter to given list parameter
 int AddCard(Card *newCard, Card **list) {
-        //Structure: oldtopcard -> newtopcard -> dummy
+        //Structure: oldtopcard <-> newtopcard <-> dummy
 
         //Change next pointer of the old topcard
         (*list)->prev->next = newCard;
@@ -65,6 +61,7 @@ int DeleteCard(char *cardID, Card **list) {
         }
         return -1; //Card not found in list
     }
+
 //Give the dummy value of frompile and toPile, to move 'x' amount of topcards from
 //'fromPile' to 'toPile'
 void MoveTopCards(Card** fromPile, Card** toPile, int amount) {

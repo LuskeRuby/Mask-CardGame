@@ -124,12 +124,13 @@ public class SolitaireClient extends JFrame {
             cardPanel.removeAll();
             statusPanel.removeAll();
             
-            // Remove newlines from input 
+            //Remove newlines from input 
             String[] lines = boardData.split("\n");
+
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.insets = new Insets(0, 2, 2, 2); //padding around each card
 
-            // Get LastCommand and msg and put in statusPanel box in gui
+            //Get LastCommand and msg and put in statusPanel box in gui
             String lastCommand = lines[lines.length - 2];
             String message = lines[lines.length - 1];
             JLabel lastCommandLabel = new JLabel(lastCommand);
@@ -155,13 +156,13 @@ public class SolitaireClient extends JFrame {
                     gbc.gridx = col;
                     gbc.gridy = row;
 
-                    // if foundation
+                    //add space between foundationColumn and other columns
                     if (col == 7) {
                         cardPanel.add(Box.createRigidArea(new Dimension(40, 0)), gbc); // Add space between column7 and foundation
                     }
-
+                    //if column is empty then show a "noCard"
                     if (token.isEmpty() && i ==2 && col < 7) {
-                        addCardImage(cardPanel, "Cards/noCard.png", gbc, token,col); //Link cardid to empty image card
+                        addCardImage(cardPanel, "Cards/noCard.png", gbc, token,col); 
                     }
                     //If facedowncard or foundation
                     if (token.equals("[]")) { 
@@ -171,7 +172,7 @@ public class SolitaireClient extends JFrame {
                         } else { //Facedowncard
                             addCardImage(cardPanel, "Cards/EMPTY.png", gbc, token,col); //Link cardid to empty image card
                         }
-                    // Any other card (use regular expression)
+                    //Any other card (use regular expression)
                     } else if (token.matches("[2-9TJQKA][CDHS]")) { 
                         String imagePath = "Cards/" + token + ".png";
                         addCardImage(cardPanel, imagePath, gbc, token, col); //Link cardid to empty image card, and give mouseclick eventhandler
@@ -184,10 +185,8 @@ public class SolitaireClient extends JFrame {
                         cardPanel.add(label, gbc);
                     }
                 }
-
                 row++;
             }
-
             cardPanel.revalidate();
             cardPanel.repaint();
         });
@@ -244,12 +243,10 @@ public class SolitaireClient extends JFrame {
             }
             this.cardID = token;
         }
-
         //Getters
         public String getCardID() { 
             return cardID;
         }
-
         public String getCol() {
             return col;
         }
@@ -263,7 +260,7 @@ public class SolitaireClient extends JFrame {
         if (returnString.equals("") && !cardID.equals("noCard") && !cardID.equals("[]")) { 
             returnString += col + ":" + cardID + "->"; //converts cards field to inputcommand
             
-            //Column, moved card is moved too (runs the second time this function is called)
+            //The column that the moved card is moved too (runs the second time this function is called)
         } else if (!returnString.equals("")) { 
             returnString += col;
             sendCommand(); //Send command now

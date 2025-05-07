@@ -1,11 +1,7 @@
-//
-// Created by rubym on 24/04/2025.
-//
-
+#include <stdio.h>
 #include "deck.h"
 #ifndef STARTPHASECOMMANDS_H
 #define STARTPHASECOMMANDS_H
-#include "model/deck.h"
 
 
 Card* BuildLinkedListFromFile(FILE* stream);

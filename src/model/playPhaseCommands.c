@@ -3,20 +3,19 @@
 //
 #include "MODEL/deck.h"
 #include "playPhaseCommands.h"
-
+#include <stdio.h>
 #include <string.h>
 #include <controller/playPhase.h>
-
 #include "StartPhaseCommands.h"
 
 //Global arrays
 Card* columnArr[7];
 Card* foundationArr[4];
 
-// Global LOG
-char moveLog[MAX_MOVES][15]; // store up to 500 move commands, each max 15 chars like "C1:3H->C3"
-int moveCount = 0;           // Number of moves logged
-int currentMove = 0;         // Index of the next move to redo (like a cursor)
+// Global vars for logging moves
+char moveLog[MAX_MOVES][15]; //store up to 500 move commands, each max 15 chars like "C1:3H->C3"
+int moveCount = 0;           //Number of moves logged
+int currentMove = 0;         //Index of the next move to redo
 
 
 void InitArray() {
@@ -89,6 +88,7 @@ void ExtractColumnsFromInput(char *input, Card** fromArr, Card** toArr, char Has
     }
 }
 
+//Log move
 void LogNewMove(const char* move,  const char* flipped) {
 
     char entry[12] = "";  // ensure it's empty
@@ -107,7 +107,7 @@ void LogNewMove(const char* move,  const char* flipped) {
         currentMove = moveCount;  // Clear redo history after this
     }
 }
-
+//Redo move
 void UndoMove() {
     if (currentMove == 0) {
         printf("Nothing to undo.\n");
@@ -136,12 +136,12 @@ void UndoMove() {
         return;
     }
 
-    // Check if we need to flip the top card back
+    //Check if we need to flip the top card back
     if (lastMove[9] == '1') {
         Card* from = NULL;
         Card* to = NULL;
 
-        // Use the original move (not reversed!) to extract the original 'from'
+        //Use the original move (not reversed!) to extract the original 'from'
         ExtractColumnsFromInput(lastMove, &from, &to, 1);
 
         //flip the top card back
@@ -154,7 +154,7 @@ void UndoMove() {
 
 
 
-// Function to redo the last undone move
+// Function to redo the last move
 void RedoMove() {
     if (currentMove < moveCount) {
         printf("Redo: %s\n", moveLog[currentMove]);

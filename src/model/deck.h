@@ -1,4 +1,3 @@
-#include <stdio.h>
 #ifndef DECK_H
 #define DECK_H
 
@@ -21,9 +20,9 @@ extern Card* foundationArr[4];  // Declaring external reference for foundationAr
 
 //Card Functions
 Card* CreateCard(char *ID);
-int AddCard(Card *newCard, Card **list);
-int DeleteCard(char *cardID, Card **list);
-void MoveTopCards(Card** fromPile, Card** toPile, int amount);
-int SizeOfDeck(Card** deck);
+int AddCard(Card *newCard, Card **list); //Add card parametr to given list parameter
+int DeleteCard(char *cardID, Card **list); //Delete card matching cardID parameter from list, and free it from memory
+void MoveTopCards(Card** fromPile, Card** toPile, int amount); //Give the dummy value of frompile and toPile, to move 'amount' of topcards from 'fromPile' to 'toPile'
+int SizeOfDeck(Card** deck); //Return amount of cards in list/deck
 
 #endif //CARD_H
