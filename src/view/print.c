@@ -65,10 +65,10 @@ void PrintPlayPhase(char lastCommand[3], char* msg) {
     // reset Outpurstring
     outputString[0] = '\0';
 
-    // Append header to the output string (but do NOT print)
+    //add columnnames to the output string
     strcat(outputString, "C1\tC2\tC3\tC4\tC5\tC6\tC7\n\n");
 
-    // Row printer, continues until all 7 columns are done printing
+    //Row printer, continues until all 7 columns are done printing
     while (fullyPrintedColumns < 7) {
         fullyPrintedColumns = 0;
         for (int col = 0; col < 7; col++) { // iterate columns
@@ -77,7 +77,7 @@ void PrintPlayPhase(char lastCommand[3], char* msg) {
             if (strcmp(tempColumnArr[col]->next->ID, "00") != 0) {
                 tempColumnArr[col] = tempColumnArr[col]->next; // only go next if not reached dummy
                 if (tempColumnArr[col]->faceUp == 1) {
-                    // Concatenate the ID to outputBuffer
+                    // Concatenate the ID to outputString
                     strcat(outputString, tempColumnArr[col]->ID);
                     strcat(outputString, "\t");
                 } else {

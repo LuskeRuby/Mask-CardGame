@@ -160,10 +160,17 @@ public class SolitaireClient extends JFrame {
                         cardPanel.add(Box.createRigidArea(new Dimension(40, 0)), gbc); // Add space between column7 and foundation
                     }
 
-                    //If facedowncard
-                    if (token.equals("[]")) { //Facedown
-                        addCardImage(cardPanel, "Cards/EMPTY.png", gbc, token,col); //Link cardid to empty image card
-                        
+                    if (token.isEmpty() && i ==2 && col < 7) {
+                        addCardImage(cardPanel, "Cards/noCard.png", gbc, token,col); //Link cardid to empty image card
+                    }
+                    //If facedowncard or foundation
+                    if (token.equals("[]")) { 
+                        //Foundation
+                        if (col > 7) { 
+                            addCardImage(cardPanel, "Cards/noCard.png", gbc, token,col); //Link cardid to empty image card
+                        } else { //Facedowncard
+                            addCardImage(cardPanel, "Cards/EMPTY.png", gbc, token,col); //Link cardid to empty image card
+                        }
                     // Any other card (use regular expression)
                     } else if (token.matches("[2-9TJQKA][CDHS]")) { 
                         String imagePath = "Cards/" + token + ".png";
@@ -196,7 +203,6 @@ public class SolitaireClient extends JFrame {
             if (icon.getIconWidth() == -1) throw new IOException("Image not found");
             Image scaled = icon.getImage().getScaledInstance(60, 70, Image.SCALE_SMOOTH);
 
-
             //Make the card an object (cardLabel)
             CardLabel cardLabel = new CardLabel(token, new ImageIcon(scaled), colnr);
 
@@ -208,6 +214,9 @@ public class SolitaireClient extends JFrame {
                     public void mouseClicked(MouseEvent e) {
                         //This Func prepares returnstring, which is a input command of moving cards that is sent back to C program.
                         updateReturnString(cardLabel.getCardID(), cardLabel.getCol()); 
+
+                        //We wont mark the card with a border if we click on Facedown/nocard
+                        if (!cardLabel.getCardID().equals("[]") && !cardLabel.getCardID().equals("noCard") )
                         cardLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 2)); // Mark the card with a border
                         cardPanel.repaint();
                     }
@@ -250,14 +259,14 @@ public class SolitaireClient extends JFrame {
     //Prepares input command when Clicked on cards (NOT TYPED IN TEXTFIELD)
     //Inputcommand is ready if two cards are clicked on.
     void updateReturnString(String cardID, String col) {
-        //if "" then its the first card that is clicked on 
-        if (returnString.equals("")) { 
+        //moving card. (We also make sure we cant move a facedowncard (empty) or noCard.) 
+        if (returnString.equals("") && !cardID.equals("noCard") && !cardID.equals("[]")) { 
             returnString += col + ":" + cardID + "->"; //converts cards field to inputcommand
-
-            //if returnstring not empty, then this is second card that is clicked on, so we must now also return this msg.
-        } else { 
+            
+            //Column, moved card is moved too (runs the second time this function is called)
+        } else if (!returnString.equals("")) { 
             returnString += col;
-            sendCommand();
+            sendCommand(); //Send command now
         }
 
     }
