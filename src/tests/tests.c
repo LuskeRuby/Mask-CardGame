@@ -104,16 +104,11 @@ void RunTests() {
         case 5:
             RunStartupPhase("LD");
         RunStartupPhase("P");
-            RunPlayPhase("C3:7H->C5");
-        printf("movelog 0: %s\n", moveLog[0]);
-        printf("movelog 1: %s\n", moveLog[1]);
-        printf("movelog 2: %s\n", moveLog[2]);
+        RunPlayPhase("C3:QH->C7");
+        RunPlayPhase("C6:JS->C7");
+        RunPlayPhase("C6:TH->C7");
+        printf("MoveLog[2]: 1C6:TH->C7, Actual: %s\n", moveLog[2]);
         RunPlayPhase("U");
-        RunPlayPhase("R");
-        RunPlayPhase("C1->F1");
-        RunPlayPhase("U");
-        RunPlayPhase("R");
-
 
         break;
 

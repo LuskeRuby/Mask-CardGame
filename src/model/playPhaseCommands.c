@@ -1,4 +1,4 @@
-x½//
+//
 // Created by rasmu on 24-04-2025.
 //
 #include "MODEL/deck.h"
@@ -111,7 +111,7 @@ void UndoMove() {
     }
 
     char* move = moveLog[--currentMove];  // Move the cursor back to the previous move .
-    int flipped = move[0] == '1' ;               // Store the first character
+    char flipped = move[0];               // Store the first character
     char lastMove[32];
 
     strcpy(lastMove, move + 1);    // Save without the prepend
@@ -137,11 +137,16 @@ void UndoMove() {
         return;
     }
 
+
     Card* from = NULL;
     Card* to = NULL;
     char cardID[3] = { lastMove[3], lastMove[4], '\0' };
 
-    if (flipped) {
+    printf("reversedmove: %s\n",reversedMove);
+    printf("flipped: %d\n",flipped);
+    printf("cardID: %s\n",cardID);
+
+    if (flipped == '1') {
         ExtractColumnsFromInput(lastMove, &from, &to, cardID);
         from->prev->faceUp = 0;
     }
@@ -168,7 +173,7 @@ void RedoMove() {
     }
 
     char* move = moveLog[currentMove++];
-    int flipped = move[0] == '1' ;
+    char flipped = move[0];
     char lastMove[20];
 
     strcpy(lastMove, move + 1);
@@ -187,7 +192,7 @@ void RedoMove() {
     moveCount++;
     MoveTopCards(&from, &to, count);
 
-    if (flipped) {
+    if (flipped == '1') {
         from->prev->faceUp = 1;
     }
 }
