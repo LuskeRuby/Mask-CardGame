@@ -110,7 +110,7 @@ void UndoMove() {
         return;
     }
 
-    char* move = moveLog[--currentMove];  // Move the cursor back to the previous move
+    char* move = moveLog[--currentMove];  // Move the cursor back to the previous move .
     int flipped = move[0] == '1' ;               // Store the first character
     char lastMove[32];
 
