@@ -111,42 +111,57 @@ void UndoMove() {
     }
 
     char* lastMove = moveLog[--currentMove];  // Move the cursor back to the previous move
+    char flipped = lastMove[0];               // Store the first character
+
+    strcpy(lastMove, lastMove + 1);    // Save without the prepend
+
     char reversedMove[20];
 
     // Reverse the move
     if (lastMove[2] == ':') {
-    // Format: C3:QH->C7 → invert to C7:QH->C3
-    snprintf(reversedMove, sizeof(reversedMove), "%c%c:%c%c->%c%c",
-        lastMove[7], lastMove[8],  // dest
-        lastMove[3], lastMove[4],  // card ID
-        lastMove[0], lastMove[1]   // src
+        // Format: C3:QH->C7 → invert to C7:QH->C3
+        snprintf(reversedMove, sizeof(reversedMove), "%c%c:%c%c->%c%c",
+            lastMove[7], lastMove[8],  // dest
+            lastMove[3], lastMove[4],  // card ID
+            lastMove[0], lastMove[1]   // src (note: shifted by 1 due to flipped char)
         );
-    } else if (lastMove[2] == '-' && lastMove[3] == '>') {
+    } else if (lastMove[2] == '-') {
         // Format: C1->C7 → invert to C7->C1
         snprintf(reversedMove, sizeof(reversedMove), "%c%c->%c%c",
-        lastMove[4], lastMove[5],  // dest
-        lastMove[0], lastMove[1]   // src
+            lastMove[4], lastMove[5],  // dest
+            lastMove[0], lastMove[1]   // src
         );
     } else {
         printf("Cannot undo unknown move format: %s\n", lastMove);
         return;
     }
 
-    // Check if we need to flip the top card back
-    if (lastMove[9] == '1') {
-        Card* from = NULL;
-        Card* to = NULL;
+    Card* from = NULL;
+    Card* to = NULL;
 
-        // Use the original move (not reversed!) to extract the original 'from'
-        ExtractColumnsFromInput(lastMove, &from, &to, 1);
+    // Flip the top card back if needed
+    if (flipped == '1') {
 
-        //flip the top card back
-        from->prev->faceUp = 0;
+        // Use the original move (with flipped char still present) to get 'from'
+        ExtractColumnsFromInput(lastMove + 1, &from, &to, 1);  // Skip flipped char
+
+        if (from && from->prev) {
+            from->prev->faceUp = 0;
+        }
     }
+
+    // count
+    int count = 1;
+    if (reversedMove[2] == ':') {
+        char cardID[3] = { reversedMove[3], reversedMove[4], '\0' };
+        IsCardInSourceColumn(from, cardID, &count);
+    }
+
 
     // Reapply the reversed move
     RunPlayPhase(reversedMove);
 }
+
 
 void RedoMove() {
     if (currentMove >= moveCount) {

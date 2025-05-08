@@ -17,11 +17,11 @@
 void RunTests() {
     int choice;
 
-    printf("Select test to run (0-3):\n");
-    printf("  0: Play Phase Initialization\n");
-    printf("  1: Load Function\n");
-    printf("  2: Invalid Self-Move\n");
-    printf("  3: Undo/Redo Functionality\n");
+    printf("Select test to run (1-4):\n");
+    printf("  1: Play Phase Initialization\n");
+    printf("  2: Load Function\n");
+    printf("  3: Invalid Self-Move\n");
+    printf("  4: Undo/Redo Functionality\n");
     printf("Enter test number: ");
 
     if (scanf("%d", &choice) != 1) {
@@ -30,16 +30,16 @@ void RunTests() {
     }
 
     switch (choice) {
-        case 0:
-            printf("Running Test 0: Play Phase Initialization\n");
+        case 1:
+            printf("Running Test 1: Play Phase Initialization\n");
         LD(NULL);
         RunStartupPhase("P");
         printf("Expected: currentPhase == PLAY_PHASE, Actual: %d\n", currentPhase);
         printf("Expected: columnArr[0] not empty, Actual: %s\n", columnArr[0]->next != NULL ? "PASS" : "FAIL");
         break;
 
-        case 1:
-            printf("Running Test 1: LD\n");
+        case 2:
+            printf("Running Test 2: LD\n");
 
             printf("\nAttempting LD(test1337) - should return error\n");
             LD("test1337");
@@ -56,8 +56,8 @@ void RunTests() {
         break;
 
 
-        case 2:
-            printf("Running Test 1: Invalid Self-Move\n");
+        case 3:
+            printf("Running Test 3: Invalid Self-Move\n");
             LD(NULL);
             RunStartupPhase("P");
 
@@ -81,8 +81,8 @@ void RunTests() {
             "PASS (card moved)" : "FAIL (card not moved)");
             break;
 
-        case 3:
-            printf("Running Test 3: Undo/Redo Functionality\n");
+        case 4:
+            printf("Running Test 4: Undo/Redo Functionality\n");
         RunStartupPhase("LD");
         RunStartupPhase("P");
         RunPlayPhase("C3:7H->C5");
@@ -100,6 +100,15 @@ void RunTests() {
         Card* topC6 = columnArr[5]->prev;
         printf("Top card in C5 ID: Expected: 6S, Actual: %s\n", topC6->ID);
             break;
+
+        case 5:
+            RunStartupPhase("LD");
+        RunStartupPhase("P");
+            RunPlayPhase("C3:7H->C5");
+        RunPlayPhase("U");
+
+
+        break;
 
         default:
             printf("No such test implemented: %d\n", choice);

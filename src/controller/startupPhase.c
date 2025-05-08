@@ -34,9 +34,11 @@ void RunStartupPhase(const char* input) {
         strcpy(filename, command + 3);  // Copy everything after "LD "
         filename[79] = '\0';  // Null terminate
 
+
         char* result = LD(filename);
+        printf(result);
         if (strcmp(result, "OK") == 0) {
-            PrintStartupPhase("LD", 'OK \n');
+            PrintStartupPhase("LD", "OK");
         } else {
             sprintf(msgPrint, "Error loading deck '%s'.\n", filename);
             PrintStartupPhase("LD", msgPrint);
