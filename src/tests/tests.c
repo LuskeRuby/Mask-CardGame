@@ -105,7 +105,14 @@ void RunTests() {
             RunStartupPhase("LD");
         RunStartupPhase("P");
             RunPlayPhase("C3:7H->C5");
+        printf("movelog 0: %s\n", moveLog[0]);
+        printf("movelog 1: %s\n", moveLog[1]);
+        printf("movelog 2: %s\n", moveLog[2]);
         RunPlayPhase("U");
+        RunPlayPhase("R");
+        RunPlayPhase("C1->F1");
+        RunPlayPhase("U");
+        RunPlayPhase("R");
 
 
         break;

@@ -110,10 +110,11 @@ void UndoMove() {
         return;
     }
 
-    char* lastMove = moveLog[--currentMove];  // Move the cursor back to the previous move
-    char flipped = lastMove[0];               // Store the first character
+    char* move = moveLog[--currentMove];  // Move the cursor back to the previous move
+    int flipped = move[0] == '1' ;               // Store the first character
+    char lastMove[32];
 
-    strcpy(lastMove, lastMove + 1);    // Save without the prepend
+    strcpy(lastMove, move + 1);    // Save without the prepend
 
     char reversedMove[20];
 
@@ -138,28 +139,24 @@ void UndoMove() {
 
     Card* from = NULL;
     Card* to = NULL;
+    char cardID[3] = { lastMove[3], lastMove[4], '\0' };
 
-    // Flip the top card back if needed
-    if (flipped == '1') {
-
-        // Use the original move (with flipped char still present) to get 'from'
-        ExtractColumnsFromInput(lastMove + 1, &from, &to, 1);  // Skip flipped char
-
-        if (from && from->prev) {
-            from->prev->faceUp = 0;
-        }
+    if (flipped) {
+        ExtractColumnsFromInput(lastMove, &from, &to, cardID);
+        from->prev->faceUp = 0;
     }
 
-    // count
+    int useCardID = (reversedMove[2] == ':') ? 1 : 0;
+    ExtractColumnsFromInput(reversedMove, &from, &to, useCardID);
+
     int count = 1;
-    if (reversedMove[2] == ':') {
-        char cardID[3] = { reversedMove[3], reversedMove[4], '\0' };
+    if (useCardID) {
         IsCardInSourceColumn(from, cardID, &count);
     }
 
+    MoveTopCards(&from, &to, count);
 
-    // Reapply the reversed move
-    RunPlayPhase(reversedMove);
+
 }
 
 
@@ -169,27 +166,26 @@ void RedoMove() {
         return;
     }
 
-    char* fullEntry = moveLog[currentMove++];
-    int flipped = fullEntry[0] == '1';
+    char* move = moveLog[currentMove++];
+    int flipped = move[0] == '1' ;
+    char lastMove[20];
 
-    char move[31];
-    strncpy(move, fullEntry + 1, sizeof(move) - 1);
-    move[sizeof(move) - 1] = '\0';
+    strcpy(lastMove, move + 1);
 
     Card* from = NULL;
     Card* to = NULL;
-    int useCardID = (move[2] == ':') ? 1 : 0;
-    ExtractColumnsFromInput(move, &from, &to, useCardID);
+    int moveType = (lastMove[2] == ':') ? 1 : 0;
+    ExtractColumnsFromInput(lastMove, &from, &to, moveType);
 
     int count = 1;
-    if (useCardID) {
-        char cardID[3] = { move[3], move[4], '\0' };
+    if (moveType) {
+        char cardID[3] = { lastMove[3], lastMove[4], '\0' };
         IsCardInSourceColumn(from, cardID, &count);
     }
 
     MoveTopCards(&from, &to, count);
 
-    if (flipped && from && from->prev && strcmp(from->prev->ID, "00") != 0) {
+    if (flipped) {
         from->prev->faceUp = 1;
     }
 }
