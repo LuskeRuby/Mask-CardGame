@@ -1,4 +1,4 @@
-//
+x½//
 // Created by rasmu on 24-04-2025.
 //
 #include "MODEL/deck.h"
@@ -154,6 +154,7 @@ void UndoMove() {
         IsCardInSourceColumn(from, cardID, &count);
     }
 
+    moveCount--;
     MoveTopCards(&from, &to, count);
 
 
@@ -183,6 +184,7 @@ void RedoMove() {
         IsCardInSourceColumn(from, cardID, &count);
     }
 
+    moveCount++;
     MoveTopCards(&from, &to, count);
 
     if (flipped) {
