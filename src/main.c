@@ -25,7 +25,9 @@ int main(void) {
 
 int main() {
 
-    // RunTests();
+    // Launch Java GUI (must have Java installed and in PATH)
+    system("java -jar SolitaireClient/SolitaireClient.java");
+    //RunTests();
 
     WSADATA wsa;
     SOCKET server_socket, client_socket;
